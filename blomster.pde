@@ -4,15 +4,16 @@ float golden = 1.618;
 int h = 800;
 int w = int(h * golden);
 
+int margH = 40;
+int margW = 40;
+
 int countWide = 14;
 int countHigh = 6;
 
 float secWidth, bigSecWidth;
 float secHeight, bigSecHeight;
 
-float stemWidthMin = 3;
-float stemWidthMax = 10;
-int   stemBaseVarianceFactor = 10; // the lower, the more variance. 1 is min.
+int   stemBaseVarianceFactor = 15; // the lower, the more variance. 1 is min.
 
 boolean debugSector = false;
 boolean debugFlower = false;
@@ -24,14 +25,19 @@ GenePool pool;
 
 // Gene Ranges {min,max}
 float[] bloomHeightRanges = { 0.3,  0.6 };
-float[] stemWidthRanges   = { 4.0,  8.0 };
-int[]   stemVariationRange= {   1,    7 };
+float[] stemWidthRanges   = { 3.0,  6.0 };
+int[]   stemVariationRange= {   1,    5 };
 
 // Do not changes these values
 // They are here for reference.
 final int STEM_SHAPE_STRAIGHT = 0;
 final int STEM_SHAPE_ANGLES   = 1;
 final int STEM_SHAPE_CURVES   = 2;
+
+final int LEAF_TYPE_THIN      = 0;
+final int LEAF_TYPE_ANGLED    = 1;
+final int LEAF_TYPE_ROUNDED   = 2;
+final int LEAF_TYPE_MULTI     = 4;
 
 public interface Genes {
     String BLOOM_HEIGHT       = "bloomHeight";
@@ -42,28 +48,30 @@ public interface Genes {
     String STEM_WIDTH         = "stemWidth";
     String STEM_VARIATION     = "stemVariation"; // number of variation points
     String STEM_THORNS        = "stemThorns";    // Does the stem have thorns or not?
+    String STEM_LEAVES_NUM    = "stemLeavesNum";
+    String STEM_LEAF_TYPE     = "stemLeafType";
 }
 
 void setup() {
   if (w % 2 != 0) w+= 1;
   size(w, h);
 
-  randomSeed(8);
+  randomSeed(4565);
 
   sectors = new ArrayList<ArrayList>();
 
   // Establish sizes for sectors
-  secWidth     = float(w) / countWide;
-  bigSecWidth  = 2 * float(w) / countWide;
-  secHeight    = float(h) / countHigh;
-  bigSecHeight = 2 * float(h) / countHigh;
+  secWidth     = (w - margW/2.0) / countWide;
+  bigSecWidth  = 2 * (w - margW/2.0) / countWide;
+  secHeight    = (h - margH/2.0) / countHigh;
+  bigSecHeight = 2 * (h - margH/2.0) / countHigh;
 
   // Create the sectors
   // The block on the left
   for (int i=0; i<countHigh;i++) {
     ArrayList<Sector>row = new ArrayList<Sector>();
     for (int j=0;j<countWide;j++) {
-      Sector s = new Sector(j*secWidth, i*secHeight, secWidth, secHeight);
+      Sector s = new Sector(j*secWidth + margW/4.0, i*secHeight + margH/4.0, secWidth, secHeight);
       row.add(s);
     }
     sectors.add(row);
@@ -96,7 +104,7 @@ void blockBigSector(int xpos, int ypos) {
   }
 
   // Create the large sector
-  Sector s = new Sector(xpos*secWidth, ypos*secHeight, bigSecWidth, bigSecHeight);
+  Sector s = new Sector(xpos*secWidth + margW/4.0, ypos*secHeight + margH/4.0, bigSecWidth, bigSecHeight);
   s.bigsec = true;
   sectors.get(ypos).add(s);
 }

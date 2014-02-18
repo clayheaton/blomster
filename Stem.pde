@@ -1,10 +1,13 @@
 class Stem {
   PVector position, topAnchor, bottomAnchor;
   float   w, h, stemWidth;
-  int     stemShape, stemVariation;
+  int     stemShape, stemVariation, stemLeavesNum, stemLeafType;
   color   mainColor;
   ArrayList<PVector>stemCenterPoints;
   ArrayList<PVector>stemPoints;
+  ArrayList<Leaf> leaves;
+  IntList leafAttachedLeft;  // maps to stemCenterPoints
+  IntList leafAttachedRight; // maps to stemCenterPoints
 
 
   Stem(PVector _position, 
@@ -15,7 +18,9 @@ class Stem {
   color _mainColor, 
   int _stemShape, 
   float _stemWidth, 
-  int _stemVariation) {
+  int _stemVariation, 
+  int _stemLeavesNum, 
+  int _stemLeafType) {
 
     w             = _w;
     h             = _h;
@@ -26,11 +31,20 @@ class Stem {
     stemShape     = _stemShape;
     stemWidth     = _stemWidth;
     stemVariation = _stemVariation;
+    stemLeavesNum = _stemLeavesNum;
+    stemLeafType  = _stemLeafType;
 
 
-    stemPoints = new ArrayList<PVector>();
+    stemPoints       = new ArrayList<PVector>();
     stemCenterPoints = new ArrayList<PVector>();
+    leafAttachedLeft = new IntList();
+    leafAttachedRight = new IntList();
+
     setupStemPoints();
+
+    leaves           = new ArrayList<Leaf>();
+
+    setupLeaves();
   }
 
   void display() {
@@ -57,6 +71,10 @@ class Stem {
       break;
     default:
       println("Stem Problem");
+    }
+    
+    for(Leaf l : leaves){
+     l.display(); 
     }
 
     // Pop back to the regular space
@@ -117,13 +135,17 @@ class Stem {
     for (int i = 1; i <= stemVariation; i++) {
       float r = random(-0.05, 0.05);
       stemCenterPoints.add( PVector.lerp(bottomAnchor, topAnchor, lerpPercent * i + r));
+
+      // Set up the leaf attachment ArrayLists with 0 as values indicating no leaf attached
+      leafAttachedLeft.append(0);
+      leafAttachedRight.append(0);
     }
 
 
     // Take the temp points and create a round-trip arraylist
     // that will be used to create the stem.
     PVector bt = bottomAnchor.get();
-    float baseFactor = stemWidth/2;
+    float baseFactor = random(0, stemWidth);
     bt.sub(stemWidth/2.0 - baseFactor, 0, 0);
     stemPoints.add(bt.get());
 
@@ -134,7 +156,7 @@ class Stem {
     FloatList randomOffsets = new FloatList();
 
     for (PVector p : stemCenterPoints) {
-      float r = random(-stemWidth/3.0, stemWidth/3.0); // Change for random variation
+      float r = random(-stemWidth/2.0, stemWidth/2.0); // Change for random variation
       randomOffsets.append(r);
       PVector t = new PVector(p.x - stemWidth/2 + r, p.y);
       stemPoints.add(t); // RANDOMIZE THIS
@@ -162,6 +184,68 @@ class Stem {
 
     bt.add(stemWidth + baseFactor, 0, 0);
     stemPoints.add(bt.get());
+  }
+
+  void setupLeaves() {
+    // println("# leaves: " + stemLeavesNum + ", type: " + stemLeafType);
+    float r = random(0, 100);
+    boolean left = false;
+    if (r > 50) {
+      left = true;
+    }
+
+    // Not assigned any leaves
+    if (stemLeavesNum == 0) return;
+
+    for (int i = 0; i < stemLeavesNum; i++) {
+      int idx = (int)random(0, stemCenterPoints.size());
+      
+      PVector pt2;
+      
+      float stemAnchorPerc = 0.1;
+      
+      if(stemCenterPoints.size() == 1){
+        pt2 = PVector.lerp(stemCenterPoints.get(0),bottomAnchor,stemAnchorPerc);
+      } else if(idx == 0) {
+        pt2 = PVector.lerp(stemCenterPoints.get(0),bottomAnchor,stemAnchorPerc);
+      } else {
+        pt2 = PVector.lerp(stemCenterPoints.get(idx),stemCenterPoints.get(idx - 1), stemAnchorPerc); 
+      }
+      
+      boolean leftBlocked = false;
+      boolean rightBlocked = false;
+
+      // Check if the sides are blocked at this node
+      if (left) {
+        if (leafAttachedLeft.get(idx) == 1) {
+          left = false; 
+          leftBlocked = true;
+        }
+      } 
+      if (!left) {
+        if (leafAttachedRight.get(idx) == 1) {
+          left = true;
+          rightBlocked = true;
+        }
+      }
+      
+      // picked a bad node... TODO figure out how to try another
+      if(leftBlocked && rightBlocked){
+       continue; 
+      }
+      
+      if(left){
+        Leaf l = new Leaf(stemCenterPoints.get(idx), pt2, true, stemLeafType);
+        leaves.add(l);
+        leafAttachedLeft.set(idx,1);
+        
+      } else {
+        Leaf l = new Leaf(pt2, stemCenterPoints.get(idx), false, stemLeafType);
+        leaves.add(l);
+        leafAttachedRight.set(idx,1);
+      }
+      
+    }
   }
 }
 

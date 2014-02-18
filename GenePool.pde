@@ -10,6 +10,8 @@ class GenePool {
   IntList stemShapeValues;
   FloatList stemWidthValues;
   IntList stemVariationValues;
+  IntList stemLeavesNumValues;
+  IntList leafTypeValues;
 
   GenePool() {
     allelePool = "ABCDEFGHIJKLMNOPQRST";
@@ -20,8 +22,22 @@ class GenePool {
     stemShapeValues   = new IntList();
     stemWidthValues   = new FloatList();
     stemVariationValues = new IntList();
+    stemLeavesNumValues = new IntList();
+    leafTypeValues    = new IntList();
 
     setupGenes();
+  }
+
+  // For establishing chromosomes
+  void setupGenes() {
+    setupBloomHeight();
+    setupBloomColor();
+    setupStemColor();
+    setupStemShape();
+    setupStemWidth();
+    setupStemVariation();
+    setupStemLeavesNumber();
+    setupLeafTypes();
   }
 
   String buildChromosome() {
@@ -62,25 +78,25 @@ class GenePool {
     // stemWidth
     int swRand = (int)random(0, 19);
     chromosome = chromosome + alleleAssignment(swRand);
-    
+
     // stemVariation 
     int maxIndex = stemVariationValues.size(); // POSSIBLE BUG: might need to -1 on maxIndex
-    int stemVariation = (int)random(0,maxIndex);
+    int stemVariation = (int)random(0, maxIndex);
     chromosome = chromosome + alleleAssignment(stemVariation);
+
+    // stem leaves number
+    maxIndex = stemLeavesNumValues.size();
+    int stemLeavesNum = (int)random(0, maxIndex);
+    chromosome = chromosome + alleleAssignment(stemLeavesNum);
+    
+    // Leaf types
+    maxIndex = leafTypeValues.size();
+    int leafTypeNum = (int)random(0,maxIndex);
+    chromosome = chromosome + alleleAssignment(leafTypeNum);
 
     return chromosome;
   }
 
-
-  // For establishing chromosomes
-  void setupGenes() {
-    setupBloomHeight();
-    setupBloomColor();
-    setupStemColor();
-    setupStemShape();
-    setupStemWidth();
-    setupStemVariation();
-  }
 
   String alleleAssignment(int number) {
     String allele     = Character.toString(allelePool.charAt(number));
@@ -230,6 +246,38 @@ class GenePool {
   int stemVariationVal(String chrom) {
     int index = alleleIndexForGene(chrom, Genes.STEM_VARIATION);
     return stemVariationValues.get(index);
+  }
+
+  // Stem Leaves Number
+  void setupStemLeavesNumber() {
+    // Index 7 in allelePool
+    geneMap.put(Genes.STEM_LEAVES_NUM, 7);
+    int numValues = stemVariationRange[1] - stemVariationRange[0];
+    numValues = min(numValues,3); // TODO: Possibly change
+    stemLeavesNumValues.append(0);
+    for (int i = 0; i < numValues + 1; i++) {
+      stemLeavesNumValues.append(stemVariationRange[0] + i);
+    }
+  }
+
+  int stemLeavesNumVal(String chrom) {
+    int index = alleleIndexForGene(chrom, Genes.STEM_LEAVES_NUM);
+    return stemLeavesNumValues.get(index);
+  }
+
+  // Leaf Types
+  void setupLeafTypes() {
+    // Index 8 in allelePool
+    geneMap.put(Genes.STEM_LEAF_TYPE, 8);
+    leafTypeValues.append(LEAF_TYPE_THIN); // straight
+    leafTypeValues.append(LEAF_TYPE_ANGLED); // angles
+    leafTypeValues.append(LEAF_TYPE_ROUNDED); // curves
+    leafTypeValues.append(LEAF_TYPE_MULTI);
+  }
+
+  int leafTypeVal(String chrom) {
+    int index = alleleIndexForGene(chrom, Genes.STEM_LEAF_TYPE);
+    return leafTypeValues.get(index);
   }
 }
 
