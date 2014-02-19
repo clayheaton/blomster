@@ -12,6 +12,9 @@ class GenePool {
   IntList stemVariationValues;
   IntList stemLeavesNumValues;
   IntList leafTypeValues;
+  IntList leafPatternValues;
+  IntList bloomStyleValues;
+  IntList bloomVariantValues;
 
   GenePool() {
     allelePool = "ABCDEFGHIJKLMNOPQRST";
@@ -24,6 +27,9 @@ class GenePool {
     stemVariationValues = new IntList();
     stemLeavesNumValues = new IntList();
     leafTypeValues    = new IntList();
+    leafPatternValues = new IntList();
+    bloomStyleValues  = new IntList();
+    bloomVariantValues= new IntList();
 
     setupGenes();
   }
@@ -38,6 +44,10 @@ class GenePool {
     setupStemVariation();
     setupStemLeavesNumber();
     setupLeafTypes();
+    setupLeafPatterns();
+    setupStemLeafHighlight();
+    setupBloomStyle();
+    setupBloomVariant();
   }
 
   String buildChromosome() {
@@ -58,7 +68,7 @@ class GenePool {
     chromosome   = chromosome + alleleAssignment(bhColorM);
 
     // stemColor
-    int stemColor = (int)random(0, 19);
+    int stemColor = (int)random(0, stemColorValues.size());
     chromosome = chromosome + alleleAssignment(stemColor);
 
     // stemShape
@@ -88,11 +98,28 @@ class GenePool {
     maxIndex = stemLeavesNumValues.size();
     int stemLeavesNum = (int)random(0, maxIndex);
     chromosome = chromosome + alleleAssignment(stemLeavesNum);
-    
+
     // Leaf types
     maxIndex = leafTypeValues.size();
-    int leafTypeNum = (int)random(0,maxIndex);
+    int leafTypeNum = (int)random(0, maxIndex);
     chromosome = chromosome + alleleAssignment(leafTypeNum);
+
+    // Leaf patterns
+    maxIndex = leafPatternValues.size();
+    int leafPatternNum = (int)random(0, maxIndex);
+    chromosome = chromosome + alleleAssignment(leafPatternNum);
+    
+    // Leaf Colors
+    int leafHighlightColor = (int)random(0, stemColorValues.size());
+    chromosome = chromosome + alleleAssignment(leafHighlightColor);
+    
+    // Bloom Styles
+    int bloomStyle = (int)random(0,bloomStyleValues.size());
+    chromosome = chromosome + alleleAssignment(bloomStyle);
+    
+    // Bloom Variant
+    int bloomVariant = (int)random(0,bloomVariantValues.size());
+    chromosome = chromosome + alleleAssignment(bloomVariant);
 
     return chromosome;
   }
@@ -253,7 +280,7 @@ class GenePool {
     // Index 7 in allelePool
     geneMap.put(Genes.STEM_LEAVES_NUM, 7);
     int numValues = stemVariationRange[1] - stemVariationRange[0];
-    numValues = min(numValues,3); // TODO: Possibly change
+    numValues = min(numValues, 3); // TODO: Possibly change
     stemLeavesNumValues.append(0);
     for (int i = 0; i < numValues + 1; i++) {
       stemLeavesNumValues.append(stemVariationRange[0] + i);
@@ -278,6 +305,60 @@ class GenePool {
   int leafTypeVal(String chrom) {
     int index = alleleIndexForGene(chrom, Genes.STEM_LEAF_TYPE);
     return leafTypeValues.get(index);
+  }
+
+  // Leaf Patterns
+  void setupLeafPatterns() {
+    // Index 9 in allelePool
+    geneMap.put(Genes.STEM_LEAF_PATTERN, 9);
+    leafPatternValues.append(LEAF_PATTERN_NONE); 
+    leafPatternValues.append(LEAF_PATTERN_VEINS);
+    leafPatternValues.append(LEAF_PATTERN_FILLED);
+    leafPatternValues.append(LEAF_PATTERN_CIRCLES);
+  }
+
+  int leafPatternVal(String chrom) {
+    int index = alleleIndexForGene(chrom, Genes.STEM_LEAF_PATTERN);
+    return leafPatternValues.get(index);
+  }
+  
+  // Stem Leaf Highlight -- alt green shades.
+  void setupStemLeafHighlight(){
+    geneMap.put(Genes.STEM_LEAF_HIGHLIGHT, 10);
+  }
+  
+  color leafHighlightVal(String chrom) {
+    int index = alleleIndexForGene(chrom, Genes.STEM_LEAF_HIGHLIGHT);
+    return stemColorValues.get(index).getColor();
+  }
+  
+  // Bloom Style
+  void setupBloomStyle() {
+    geneMap.put(Genes.BLOOM_STYLE,11);
+    bloomStyleValues.append(BLOOM_STYLE_DAISY);
+    bloomStyleValues.append(BLOOM_STYLE_CUP);
+    bloomStyleValues.append(BLOOM_STYLE_DANDY);
+    bloomStyleValues.append(BLOOM_STYLE_CLUSTER);
+  }
+  
+  int bloomStyleVal(String chrom){
+    int index = alleleIndexForGene(chrom, Genes.BLOOM_STYLE);
+    return bloomStyleValues.get(index);
+  }
+  
+  // Bloom Variant
+  void setupBloomVariant() {
+    geneMap.put(Genes.BLOOM_VARIANT,12);
+    int numValues = bloomVariantRange[1] - bloomVariantRange[0];
+
+    for (int i = 0; i < numValues + 1; i++) {
+      bloomVariantValues.append(bloomVariantRange[0] + i);
+    }
+  }
+  
+  int bloomVariantVal(String chrom) {
+    int index = alleleIndexForGene(chrom, Genes.BLOOM_VARIANT);
+    return bloomVariantValues.get(index);
   }
 }
 

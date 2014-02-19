@@ -1,6 +1,8 @@
 class Flower {
   PVector position;
   float w, h;
+  
+  float flowerScale;
 
   String chromosome;
 
@@ -9,16 +11,18 @@ class Flower {
 
   float bloomH;
   color bloomC, bloomCM;
+  int   bloomStyle, bloomVariant;
   
   color   stemC;
   PVector stemAnchor;
-  int     stemShape, stemVariation, stemLeavesNum, stemLeafType;
+  int     stemShape, stemVariation, stemLeavesNum, stemLeafType, stemLeafPattern, stemLeafHighlight;
   float   stemWidth;
 
-  Flower(PVector tempPos, float tempW, float tempH) {
+  Flower(PVector tempPos, float tempW, float tempH, float _flowerScale) {
     position = tempPos;
     w = tempW;
     h = tempH;
+    flowerScale = _flowerScale;
 
     chromosome = pool.buildChromosome();
     // println("flower chromosome:" + chromosome);
@@ -27,7 +31,7 @@ class Flower {
     stemSetup();
     
     // Create the bloom object
-    bloom   = new Bloom(position, w, bloomH, bloomC, bloomCM);
+    bloom   = new Bloom(position, w, bloomH, bloomC, bloomCM, bloomStyle, bloomVariant);
     
     // Create the stem object
     stem = new Stem(position, w, h, 
@@ -36,7 +40,10 @@ class Flower {
                     stemShape, stemWidth,
                     stemVariation,
                     stemLeavesNum,
-                    stemLeafType);
+                    stemLeafType,
+                    stemLeafPattern,
+                    flowerScale,
+                    stemLeafHighlight);
   } 
 
   void display() {
@@ -62,6 +69,10 @@ class Flower {
 
     // Bloom Color Minor
     bloomCM = pool.bloomColorMinorVal(chromosome);
+    
+    bloomStyle = pool.bloomStyleVal(chromosome);
+    
+    bloomVariant = pool.bloomVariantVal(chromosome);
   }
 
   void stemSetup() {
@@ -75,6 +86,8 @@ class Flower {
     stemVariation = pool.stemVariationVal(chromosome);
     stemLeavesNum = pool.stemLeavesNumVal(chromosome);
     stemLeafType  = pool.leafTypeVal(chromosome);
+    stemLeafPattern = pool.leafPatternVal(chromosome);
+    stemLeafHighlight = pool.leafHighlightVal(chromosome);
   }
 }
 
