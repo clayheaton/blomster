@@ -26,10 +26,18 @@ ArrayList<ArrayList>sectors;
 GenePool pool;
 
 // Gene Ranges {min,max}
-float[] bloomHeightRanges = { 0.3,  0.6 };
-float[] stemWidthRanges   = { 3.0,  6.0 };
-int[]   stemVariationRange= {   1,    5 };
-int[]   bloomVariantRange = {   1,    3 };
+float[] bloomHeightRanges = { 
+  0.3, 0.6
+};
+float[] stemWidthRanges   = { 
+  3.0, 6.0
+};
+int[]   stemVariationRange= {   
+  1, 5
+};
+int[]   bloomVariantRange = {   
+  1, 3
+};
 
 // Do not changes these values
 // They are here for reference.
@@ -53,32 +61,31 @@ final int BLOOM_STYLE_DANDY    = 2;
 final int BLOOM_STYLE_CLUSTER  = 3;
 
 public interface Genes {
-    String BLOOM_HEIGHT        = "bloomHeight";
-    String BLOOM_COLOR_MAJOR   = "bloomColorMajor";
-    String BLOOM_COLOR_MINOR   = "bloomColorMinor";
-    String BLOOM_STYLE         = "bloomStyle";
-    String BLOOM_VARIANT       = "bloomVariant";
-    String STEM_COLOR          = "stemColor";
-    String STEM_SHAPE          = "stemShape";     // jagged or curved
-    String STEM_WIDTH          = "stemWidth";
-    String STEM_VARIATION      = "stemVariation"; // number of variation points
-    String STEM_THORNS         = "stemThorns";    // Does the stem have thorns or not?
-    String STEM_LEAVES_NUM     = "stemLeavesNum";
-    String STEM_LEAF_TYPE      = "stemLeafType";
-    String STEM_LEAF_PATTERN   = "stemLeafPattern";
-    String STEM_LEAF_HIGHLIGHT = "stemLeafHighlight";
+  String BLOOM_HEIGHT        = "bloomHeight";
+  String BLOOM_COLOR_MAJOR   = "bloomColorMajor";
+  String BLOOM_COLOR_MINOR   = "bloomColorMinor";
+  String BLOOM_STYLE         = "bloomStyle";
+  String BLOOM_VARIANT       = "bloomVariant";
+  String STEM_COLOR          = "stemColor";
+  String STEM_SHAPE          = "stemShape";     // jagged or curved
+  String STEM_WIDTH          = "stemWidth";
+  String STEM_VARIATION      = "stemVariation"; // number of variation points
+  String STEM_THORNS         = "stemThorns";    // Does the stem have thorns or not?
+  String STEM_LEAVES_NUM     = "stemLeavesNum";
+  String STEM_LEAF_TYPE      = "stemLeafType";
+  String STEM_LEAF_PATTERN   = "stemLeafPattern";
+  String STEM_LEAF_HIGHLIGHT = "stemLeafHighlight";
 }
 
 void setup() {
   if (w % 2 != 0) w+= 1;
   size(w, h);
+  pool    = new GenePool();
+  sectors = new ArrayList<ArrayList>();
+  randomSeed(994142);
 
-  randomSeed(567654);
-  
   debugFont = loadFont("Consolas-12.vlw");
   textFont(debugFont);
-
-  sectors = new ArrayList<ArrayList>();
 
   // Establish sizes for sectors
   secWidth     = (w - margW/2.0) / countWide;
@@ -86,24 +93,7 @@ void setup() {
   secHeight    = (h - margH/2.0) / countHigh;
   bigSecHeight = 2 * (h - margH/2.0) / countHigh;
 
-  // Create the sectors
-  // The block on the left
-  for (int i=0; i<countHigh;i++) {
-    ArrayList<Sector>row = new ArrayList<Sector>();
-    for (int j=0;j<countWide;j++) {
-      Sector s = new Sector(j*secWidth + margW/4.0, i*secHeight + margH/4.0, secWidth, secHeight, 1.0);
-      s.xCoord = j;
-      s.yCoord = i;
-      row.add(s);
-    }
-    sectors.add(row);
-  }
-
-  blockBigSector(9, 3);
-  
-  pool = new GenePool();
-  
-  makeFlowers();
+  initialize();
 
   smooth();
   frameRate(1);
@@ -131,6 +121,26 @@ void blockBigSector(int xpos, int ypos) {
   sectors.get(ypos).add(s);
 }
 
+void initialize() {
+
+  // Create the sectors
+  // The block on the left
+  for (int i=0; i<countHigh;i++) {
+    ArrayList<Sector>row = new ArrayList<Sector>();
+    for (int j=0;j<countWide;j++) {
+      Sector s = new Sector(j*secWidth + margW/4.0, i*secHeight + margH/4.0, secWidth, secHeight, 1.0);
+      s.xCoord = j;
+      s.yCoord = i;
+      row.add(s);
+    }
+    sectors.add(row);
+  }
+
+  blockBigSector(9, 3);
+
+  makeFlowers();
+}
+
 void drawSectors() {
   for (ArrayList<Sector> a : sectors) {
     for (Sector s: a) {
@@ -150,6 +160,13 @@ void makeFlowers() {
 }
 
 void mouseClicked() {
+  sectors.clear();
+  
+  int newSeed = (int)random(1,999999);
+  println("seed: " + newSeed);
+  randomSeed(newSeed);
+  
+  initialize();
   loop();
 }
 
