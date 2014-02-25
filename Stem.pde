@@ -37,6 +37,7 @@ class Stem {
     stemLeavesNum = _stemLeavesNum;
     stemLeafType  = _stemLeafType;
     stemScale     = _stemScale;
+    stemLeafPattern = _stemLeafPattern;
     leafHighlightColor = _leafHighlightColor;
     sumLLeaves = 0;
     sumRLeaves = 0;
@@ -238,7 +239,7 @@ class Stem {
        println("leafAttachedRight:" + leafAttachedRight);
        */
 
-      float stemAnchorPerc = 0.1 * stemScale;
+      float stemAnchorPerc = 0.1;// * stemScale;
 
       if (stemCenterPoints.size() == 1 || idx == 0) {
         // There's only one center point, so lerp from it towards the bottom

@@ -10,8 +10,9 @@ class Flower {
   Stem stem;
 
   float bloomH;
-  color bloomC, bloomCM;
-  int   bloomStyle, bloomVariant;
+  color bloomC, bloomCM, bloomColor3;
+  int   bloomStyle, bloomVariant, bloomPetalCount;
+  float bloomVariantTwo;
   
   color   stemC;
   PVector stemAnchor;
@@ -31,7 +32,7 @@ class Flower {
     stemSetup();
     
     // Create the bloom object
-    bloom   = new Bloom(position, w, bloomH, bloomC, bloomCM, bloomStyle, bloomVariant);
+    bloom   = new Bloom(position, w, bloomH, bloomC, bloomCM, bloomColor3, bloomStyle, bloomVariant, flowerScale, bloomPetalCount,bloomVariantTwo);
     
     // Create the stem object
     stem = new Stem(position, w, h, 
@@ -62,17 +63,14 @@ class Flower {
 
   void bloomSetup() {
     // Bloom Height
-    bloomH = pool.bloomHeightVal(chromosome, h);
-
-    // Bloom Color Major
-    bloomC = pool.bloomColorMajorVal(chromosome);
-
-    // Bloom Color Minor
-    bloomCM = pool.bloomColorMinorVal(chromosome);
-    
-    bloomStyle = pool.bloomStyleVal(chromosome);
-    
-    bloomVariant = pool.bloomVariantVal(chromosome);
+    bloomH          = pool.bloomHeightVal(chromosome, h);
+    bloomC          = pool.bloomColorMajorVal(chromosome);
+    bloomCM         = pool.bloomColorMinorVal(chromosome);
+    bloomColor3     = pool.bloomColorThreeVal(chromosome);
+    bloomStyle      = pool.bloomStyleVal(chromosome);
+    bloomVariant    = pool.bloomVariantVal(chromosome);
+    bloomPetalCount = pool.bloomPetalCountVal(chromosome);
+    bloomVariantTwo = pool.bloomVariantTwoVal(chromosome);
   }
 
   void stemSetup() {

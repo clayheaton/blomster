@@ -38,6 +38,10 @@ int[]   stemVariationRange= {
 int[]   bloomVariantRange = {   
   1, 3
 };
+float[] bloomVariantTwoRange = {
+  0.5, 0.8 
+};
+int[]  bloomPetalCountRange = { 3, 12 };
 
 // Do not changes these values
 // They are here for reference.
@@ -58,14 +62,18 @@ final int LEAF_PATTERN_CIRCLES = 3;
 final int BLOOM_STYLE_DAISY    = 0;
 final int BLOOM_STYLE_CUP      = 1;
 final int BLOOM_STYLE_DANDY    = 2;
-final int BLOOM_STYLE_CLUSTER  = 3;
+final int BLOOM_STYLE_ANGLED   = 3;
+final int BLOOM_STYLE_CIRCLE   = 4;
 
 public interface Genes {
   String BLOOM_HEIGHT        = "bloomHeight";
   String BLOOM_COLOR_MAJOR   = "bloomColorMajor";
   String BLOOM_COLOR_MINOR   = "bloomColorMinor";
+  String BLOOM_COLOR_THREE   = "bloomColorThree";
   String BLOOM_STYLE         = "bloomStyle";
   String BLOOM_VARIANT       = "bloomVariant";
+  String BLOOM_VARIANT_TWO   = "bloomVariantTwo";
+  String BLOOM_PETAL_COUNT   = "bloomPetalCount";
   String STEM_COLOR          = "stemColor";
   String STEM_SHAPE          = "stemShape";     // jagged or curved
   String STEM_WIDTH          = "stemWidth";
@@ -82,7 +90,7 @@ void setup() {
   size(w, h);
   pool    = new GenePool();
   sectors = new ArrayList<ArrayList>();
-  randomSeed(994142);
+  //randomSeed(994142);
 
   debugFont = loadFont("Consolas-12.vlw");
   textFont(debugFont);
@@ -96,7 +104,7 @@ void setup() {
   initialize();
 
   smooth();
-  frameRate(1);
+  frameRate(10);
   background(255);
 }
 

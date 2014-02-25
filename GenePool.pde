@@ -7,6 +7,7 @@ class GenePool {
   FloatList bloomHeightValues;
   ArrayList<IAAColor> bloomColorValues;
   ArrayList<IAAColor> stemColorValues;
+  ArrayList<IAAColor> bloomColorThreeValues;
   IntList stemShapeValues;
   FloatList stemWidthValues;
   IntList stemVariationValues;
@@ -15,21 +16,26 @@ class GenePool {
   IntList leafPatternValues;
   IntList bloomStyleValues;
   IntList bloomVariantValues;
+  IntList bloomPetalCountValues;
+  FloatList bloomVariantTwoValues;
 
   GenePool() {
     allelePool = "ABCDEFGHIJKLMNOPQRST";
-    geneMap           = new HashMap<String, Integer>();
-    bloomHeightValues = new FloatList();
-    bloomColorValues  = new ArrayList<IAAColor>();
-    stemColorValues   = new ArrayList<IAAColor>();
-    stemShapeValues   = new IntList();
-    stemWidthValues   = new FloatList();
-    stemVariationValues = new IntList();
-    stemLeavesNumValues = new IntList();
-    leafTypeValues    = new IntList();
-    leafPatternValues = new IntList();
-    bloomStyleValues  = new IntList();
-    bloomVariantValues= new IntList();
+    geneMap                = new HashMap<String, Integer>();
+    bloomHeightValues      = new FloatList();
+    bloomColorValues       = new ArrayList<IAAColor>();
+    bloomColorThreeValues  = new ArrayList<IAAColor>();
+    stemColorValues        = new ArrayList<IAAColor>();
+    stemShapeValues        = new IntList();
+    stemWidthValues        = new FloatList();
+    stemVariationValues    = new IntList();
+    stemLeavesNumValues    = new IntList();
+    leafTypeValues         = new IntList();
+    leafPatternValues      = new IntList();
+    bloomStyleValues       = new IntList();
+    bloomVariantValues     = new IntList();
+    bloomPetalCountValues  = new IntList();
+    bloomVariantTwoValues  = new FloatList();
 
     setupGenes();
   }
@@ -48,6 +54,8 @@ class GenePool {
     setupStemLeafHighlight();
     setupBloomStyle();
     setupBloomVariant();
+    setupBloomPetalCount();
+    setupBloomVariantTwo(); // Controls the shape of inset colors on angular petal flowers
   }
 
   String buildChromosome() {
@@ -96,7 +104,7 @@ class GenePool {
 
     // stem leaves number
     maxIndex = stemLeavesNumValues.size();
-    int stemLeavesNum = (int)random(0, maxIndex);
+    int stemLeavesNum = (int)random(1, maxIndex);
     chromosome = chromosome + alleleAssignment(stemLeavesNum);
 
     // Leaf types
@@ -108,18 +116,30 @@ class GenePool {
     maxIndex = leafPatternValues.size();
     int leafPatternNum = (int)random(0, maxIndex);
     chromosome = chromosome + alleleAssignment(leafPatternNum);
-    
+
     // Leaf Colors
     int leafHighlightColor = (int)random(0, stemColorValues.size());
     chromosome = chromosome + alleleAssignment(leafHighlightColor);
-    
+
     // Bloom Styles
-    int bloomStyle = (int)random(0,bloomStyleValues.size());
+    int bloomStyle = (int)random(0, bloomStyleValues.size());
     chromosome = chromosome + alleleAssignment(bloomStyle);
-    
+
     // Bloom Variant
-    int bloomVariant = (int)random(0,bloomVariantValues.size());
+    int bloomVariant = (int)random(0, bloomVariantValues.size());
     chromosome = chromosome + alleleAssignment(bloomVariant);
+
+    // Bloom Color Three
+    int bhColorThree = (int)random(0, bloomColorThreeValues.size());
+    chromosome = chromosome + alleleAssignment(bhColorThree);
+    
+    // Bloom Petal Count
+    int blPetCt = (int)random(0,bloomPetalCountValues.size());
+    chromosome = chromosome + alleleAssignment(blPetCt);
+    
+    // Bloom Variant Two
+    int blVar2 = (int)random(0,bloomVariantTwoValues.size());
+    chromosome = chromosome + alleleAssignment(blVar2);
 
     return chromosome;
   }
@@ -168,6 +188,11 @@ class GenePool {
     return bloomColorValues.get(index).getColor();
   }
 
+  color bloomColorThreeVal(String chrom) {
+    int index = alleleIndexForGene(chrom, Genes.BLOOM_COLOR_THREE);
+    return bloomColorThreeValues.get(index).getColor();
+  }
+
   void setupBloomColor() {
     geneMap.put(Genes.BLOOM_COLOR_MAJOR, 1);
     geneMap.put(Genes.BLOOM_COLOR_MINOR, 2);
@@ -192,6 +217,10 @@ class GenePool {
     bloomColorValues.add(new IAAColor(color( 251, 67, 212 )));
     bloomColorValues.add(new IAAColor(color(  67, 187, 251 )));
     bloomColorValues.add(new IAAColor(color( 237, 176, 176 )));
+
+    geneMap.put(Genes.BLOOM_COLOR_THREE, 13);
+    bloomColorThreeValues.add(new IAAColor(color(0)));
+    bloomColorThreeValues.add(new IAAColor(color(255)));
   }
 
   // Stem color
@@ -205,9 +234,9 @@ class GenePool {
     geneMap.put(Genes.STEM_COLOR, 3);
 
     stemColorValues.add(new IAAColor(color( 92, 142, 92 )));
-    stemColorValues.add(new IAAColor(color( 153, 255, 153 )));
-    stemColorValues.add(new IAAColor(color( 102, 255, 102 )));
-    stemColorValues.add(new IAAColor(color( 51, 255, 51 )));
+    stemColorValues.add(new IAAColor(color( 145, 188, 103 )));
+    stemColorValues.add(new IAAColor(color( 84, 212, 84 )));
+    stemColorValues.add(new IAAColor(color( 144, 229, 59 )));
     stemColorValues.add(new IAAColor(color( 144, 169, 0 )));
     stemColorValues.add(new IAAColor(color( 153, 204, 153 )));
     stemColorValues.add(new IAAColor(color( 102, 204, 102 )));
@@ -321,44 +350,81 @@ class GenePool {
     int index = alleleIndexForGene(chrom, Genes.STEM_LEAF_PATTERN);
     return leafPatternValues.get(index);
   }
-  
+
   // Stem Leaf Highlight -- alt green shades.
-  void setupStemLeafHighlight(){
+  void setupStemLeafHighlight() {
     geneMap.put(Genes.STEM_LEAF_HIGHLIGHT, 10);
   }
-  
+
   color leafHighlightVal(String chrom) {
     int index = alleleIndexForGene(chrom, Genes.STEM_LEAF_HIGHLIGHT);
     return stemColorValues.get(index).getColor();
   }
-  
+
   // Bloom Style
   void setupBloomStyle() {
-    geneMap.put(Genes.BLOOM_STYLE,11);
+    geneMap.put(Genes.BLOOM_STYLE, 11);
     bloomStyleValues.append(BLOOM_STYLE_DAISY);
     bloomStyleValues.append(BLOOM_STYLE_CUP);
     bloomStyleValues.append(BLOOM_STYLE_DANDY);
-    bloomStyleValues.append(BLOOM_STYLE_CLUSTER);
+    bloomStyleValues.append(BLOOM_STYLE_ANGLED);
+    bloomStyleValues.append(BLOOM_STYLE_CIRCLE);
   }
-  
-  int bloomStyleVal(String chrom){
+
+  int bloomStyleVal(String chrom) {
     int index = alleleIndexForGene(chrom, Genes.BLOOM_STYLE);
     return bloomStyleValues.get(index);
   }
-  
+
   // Bloom Variant
   void setupBloomVariant() {
-    geneMap.put(Genes.BLOOM_VARIANT,12);
+    geneMap.put(Genes.BLOOM_VARIANT, 12);
     int numValues = bloomVariantRange[1] - bloomVariantRange[0];
 
     for (int i = 0; i < numValues + 1; i++) {
       bloomVariantValues.append(bloomVariantRange[0] + i);
     }
   }
-  
+
   int bloomVariantVal(String chrom) {
     int index = alleleIndexForGene(chrom, Genes.BLOOM_VARIANT);
     return bloomVariantValues.get(index);
+  }
+
+  // GENE 13 IS BLOOM_COLOR_THREE
+
+  // Bloom Petal Count
+  void setupBloomPetalCount() {
+    geneMap.put(Genes.BLOOM_PETAL_COUNT, 14);
+    int numValues = bloomPetalCountRange[1] - bloomPetalCountRange[0];
+
+    for (int i = 0; i < numValues + 1; i++) {
+      bloomPetalCountValues.append(bloomPetalCountRange[0] + i);
+    }
+  }
+  
+  int bloomPetalCountVal(String chrom) {
+    int index = alleleIndexForGene(chrom, Genes.BLOOM_PETAL_COUNT);
+    return bloomPetalCountValues.get(index);
+  }
+  
+  // Bloom Variant Two
+  void setupBloomVariantTwo() {
+    geneMap.put(Genes.BLOOM_VARIANT_TWO, 15);
+    float range = bloomVariantTwoRange[1] - bloomVariantTwoRange[0];
+    float increment = range / 10.0;
+    bloomVariantTwoValues.append(bloomVariantTwoRange[0]);
+    for (int i=0; i<9; i++) {
+      float newVal = bloomVariantTwoValues.get(i) + increment;
+      bloomVariantTwoValues.append(newVal);
+    }
+    bloomVariantTwoValues.append(bloomVariantTwoRange[1]);
+    println("bloomVariantTwoValues: " + bloomVariantTwoValues);
+  }
+  
+  float bloomVariantTwoVal(String chrom) {
+    int index = alleleIndexForGene(chrom, Genes.BLOOM_VARIANT_TWO);
+    return bloomVariantTwoValues.get(index);
   }
 }
 
