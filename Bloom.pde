@@ -254,7 +254,7 @@ class Bloom {
 
 
     float petalAngle = 360/petalCount;
-    float halfAngle  = petalAngle / 2;
+    float halfAngle  = (petalAngle / 2) + random(-2,2);
 
     float halfAngleSub = halfAngle * 0.5;
 
@@ -287,17 +287,15 @@ class Bloom {
         outerX   = bloomCenter.x + sin(radians(thisAngle))*outerRadius/1.8;
         outerY   = bloomCenter.y + cos(radians(thisAngle))*outerRadius/1.8;
 
-        PVector innerUp = new PVector(innerUpX, innerUpY);
-        PVector sm_innerUp = PVector.lerp(bloomCenter,innerUp,minorVariantTwoVal);
+        PVector innerUp     = new PVector(innerUpX, innerUpY);
+        PVector sm_innerUp  = PVector.lerp(bloomCenter,innerUp,minorVariantTwoVal);
+        float   sm_innerUpX = sm_innerUp.x;
+        float   sm_innerUpY = sm_innerUp.y; 
 
-        float sm_innerUpX = sm_innerUp.x;
-        float sm_innerUpY = sm_innerUp.y; 
-
-        PVector outerUp = new PVector(outerUpX, outerUpY);
-        PVector sm_outerUp = PVector.lerp(bloomCenter,outerUp,minorVariantTwoVal);
-
-        float sm_outerUpX = sm_outerUp.x;
-        float sm_outerUpY = sm_outerUp.y;
+        PVector outerUp     = new PVector(outerUpX, outerUpY);
+        PVector sm_outerUp  = PVector.lerp(bloomCenter,outerUp,minorVariantTwoVal);
+        float   sm_outerUpX = sm_outerUp.x;
+        float   sm_outerUpY = sm_outerUp.y;
 
         PVector outer    = new PVector(outerX, outerY);
         PVector sm_outer = PVector.lerp(bloomCenter,outer,min(bloomVariantTwo,0.8));
@@ -318,6 +316,7 @@ class Bloom {
         float sm_innerDownY = sm_innerDown.y;
 
         stroke(255); 
+        noStroke();
         strokeWeight(0.5*secScale);
 
         // Large bg petals
@@ -334,7 +333,7 @@ class Bloom {
         vertex(bloomCenter.x, bloomCenter.y);
         endShape();
 
-        fill(secColor);
+        fill(secColor,200);
         
         beginShape();
         vertex(bloomCenter.x, bloomCenter.y);
