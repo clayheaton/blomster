@@ -27,7 +27,7 @@ class Sector {
 
   void display() {
     debugDisplay();
-    if (!dummy) {
+    if (!dummy && flowerMade) {
       flower.display();
     }
   }

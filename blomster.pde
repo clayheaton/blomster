@@ -1,9 +1,11 @@
 import java.util.Collections;
 
+int mode = 0; // Set to 0 for random, 1 for genetic
+
 PFont debugFont;
 
 float golden = 1.618;
-int h = 800;
+int h = 1000;
 int w = int(h * golden);
 
 int margH = 40;
@@ -39,9 +41,11 @@ int[]   bloomVariantRange = {
   1, 3
 };
 float[] bloomVariantTwoRange = {
-  0.5, 0.8 
+  0.5, 0.8
 };
-int[]  bloomPetalCountRange = { 3, 12 };
+int[]  bloomPetalCountRange = { 
+  3, 12
+};
 
 // Do not changes these values
 // They are here for reference.
@@ -96,12 +100,23 @@ void setup() {
   textFont(debugFont);
 
   // Establish sizes for sectors
-  secWidth     = (w - margW/2.0) / countWide;
-  bigSecWidth  = 2 * (w - margW/2.0) / countWide;
-  secHeight    = (h - margH/2.0) / countHigh;
-  bigSecHeight = 2 * (h - margH/2.0) / countHigh;
+  secWidth     =     (w - margW/2.0) / countWide;
+  bigSecWidth  = 2 * secWidth;
+  secHeight    =     (h - margH/2.0) / countHigh;
+  bigSecHeight = 2 * secHeight;
 
-  initialize();
+  switch(mode) {
+  case 0:
+    initRandom();
+    break;
+  case 1:
+    initGenetic();
+    break;
+  default:
+    initRandom(); 
+    break;
+  }
+  // initialize(); // use for random flowers
 
   smooth();
   frameRate(10);
@@ -129,8 +144,11 @@ void blockBigSector(int xpos, int ypos) {
   sectors.get(ypos).add(s);
 }
 
-void initialize() {
+void initGenetic() {
+  createSectors();
+}
 
+void createSectors() {
   // Create the sectors
   // The block on the left
   for (int i=0; i<countHigh;i++) {
@@ -145,7 +163,10 @@ void initialize() {
   }
 
   blockBigSector(9, 3);
+}
 
+void initRandom() {
+  createSectors();
   makeFlowers();
 }
 
@@ -169,12 +190,12 @@ void makeFlowers() {
 
 void mouseClicked() {
   sectors.clear();
-  
-  int newSeed = (int)random(1,999999);
+
+  int newSeed = (int)random(1, 999999);
   println("seed: " + newSeed);
   randomSeed(newSeed);
-  
-  initialize();
+
+  initRandom();
   loop();
 }
 

@@ -20,7 +20,7 @@ class GenePool {
   FloatList bloomVariantTwoValues;
 
   GenePool() {
-    allelePool = "ABCDEFGHIJKLMNOPQRST";
+    allelePool = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     geneMap                = new HashMap<String, Integer>();
     bloomHeightValues      = new FloatList();
     bloomColorValues       = new ArrayList<IAAColor>();
@@ -64,15 +64,19 @@ class GenePool {
     String chromosome = "";
 
     // bloomHeight
-    int bhRand = (int)random(0, 19);
+    int bhRand = (int)random(0, bloomHeightValues.size());
     chromosome = chromosome + alleleAssignment(bhRand);
 
     // bloomColorMajor
-    int bhColor = (int)random(0, 19);
+    int bhColor = (int)random(0, bloomColorValues.size());
     chromosome = chromosome + alleleAssignment(bhColor);
 
     // bloomColorMinor
-    int bhColorM = (int)random(0, 19);
+    int bhColorM = (int)random(0, bloomColorValues.size());
+    // Avoid having the same minor and major color
+    while(bhColorM == bhColor){
+      bhColorM = (int)random(0, bloomColorValues.size());
+    }
     chromosome   = chromosome + alleleAssignment(bhColorM);
 
     // stemColor
@@ -217,6 +221,8 @@ class GenePool {
     bloomColorValues.add(new IAAColor(color( 251, 67, 212 )));
     bloomColorValues.add(new IAAColor(color(  67, 187, 251 )));
     bloomColorValues.add(new IAAColor(color( 237, 176, 176 )));
+    
+    bloomColorValues.add(new IAAColor(color( 185, 16, 109 )));
 
     geneMap.put(Genes.BLOOM_COLOR_THREE, 13);
     bloomColorThreeValues.add(new IAAColor(color(0)));
@@ -234,15 +240,15 @@ class GenePool {
     geneMap.put(Genes.STEM_COLOR, 3);
 
     stemColorValues.add(new IAAColor(color( 92, 142, 92 )));
-    stemColorValues.add(new IAAColor(color( 145, 188, 103 )));
+    stemColorValues.add(new IAAColor(color( 79, 115, 27 ))); //145, 188, 103 ))); // change
     stemColorValues.add(new IAAColor(color( 84, 212, 84 )));
     stemColorValues.add(new IAAColor(color( 144, 229, 59 )));
     stemColorValues.add(new IAAColor(color( 144, 169, 0 )));
-    stemColorValues.add(new IAAColor(color( 153, 204, 153 )));
-    stemColorValues.add(new IAAColor(color( 102, 204, 102 )));
+    stemColorValues.add(new IAAColor(color(   2, 165, 57 ))); //153, 204, 153 ))); // change
+    stemColorValues.add(new IAAColor(color( 47, 171, 47 ))); //102, 204, 102 )));
     stemColorValues.add(new IAAColor(color( 154, 204, 52 )));
     stemColorValues.add(new IAAColor(color( 0, 204, 0 )));
-    stemColorValues.add(new IAAColor(color( 153, 153, 102 )));
+    stemColorValues.add(new IAAColor(color( 108, 165, 5))); //153, 153, 102 ))); // change
     stemColorValues.add(new IAAColor(color( 51, 153, 51 )));
     stemColorValues.add(new IAAColor(color( 86, 197, 86 )));
     stemColorValues.add(new IAAColor(color( 51, 102, 51 )));
@@ -251,8 +257,8 @@ class GenePool {
     stemColorValues.add(new IAAColor(color( 59, 76, 0 )));
     stemColorValues.add(new IAAColor(color( 82, 128, 41 )));
     stemColorValues.add(new IAAColor(color( 180, 185, 69 )));
-    stemColorValues.add(new IAAColor(color( 180, 148, 69 )));
-    stemColorValues.add(new IAAColor(color( 132, 95, 95 )));
+    stemColorValues.add(new IAAColor(color( 66, 77, 0 ))); // change
+    stemColorValues.add(new IAAColor(color( 1, 112, 25 ))); //132, 95, 95 ))); // change
   }
 
   // Stem Shape
@@ -419,7 +425,7 @@ class GenePool {
       bloomVariantTwoValues.append(newVal);
     }
     bloomVariantTwoValues.append(bloomVariantTwoRange[1]);
-    println("bloomVariantTwoValues: " + bloomVariantTwoValues);
+    // println("bloomVariantTwoValues: " + bloomVariantTwoValues);
   }
   
   float bloomVariantTwoVal(String chrom) {
