@@ -1,8 +1,14 @@
 import java.util.Collections;
 
 int mode = 0; // Set to 0 for random, 1 for genetic
+String targetChromosome = "BLMEBNEDCAPBCBJF";
+Sector bigSector; // Used when seeding the target
+Mendel mendel;
+int populationSize     = 80; // For starting the genetic algorithm
+int numGenerations     = 1000000;
+float convergenceValue = 0.95;
 
-PFont debugFont;
+PFont debugFont, mendelFont;
 
 float golden = 1.618;
 int h = 1000;
@@ -82,7 +88,7 @@ public interface Genes {
   String STEM_SHAPE          = "stemShape";     // jagged or curved
   String STEM_WIDTH          = "stemWidth";
   String STEM_VARIATION      = "stemVariation"; // number of variation points
-  String STEM_THORNS         = "stemThorns";    // Does the stem have thorns or not?
+  String STEM_THORNS         = "stemThorns";    // Does the stem have thorns or not? NOT IN USE
   String STEM_LEAVES_NUM     = "stemLeavesNum";
   String STEM_LEAF_TYPE      = "stemLeafType";
   String STEM_LEAF_PATTERN   = "stemLeafPattern";
@@ -94,9 +100,10 @@ void setup() {
   size(w, h);
   pool    = new GenePool();
   sectors = new ArrayList<ArrayList>();
-  //randomSeed(994142);
+  randomSeed(565299);
 
   debugFont = loadFont("Consolas-12.vlw");
+  mendelFont = loadFont("CourierNewPS-BoldMT-24.vlw");
   textFont(debugFont);
 
   // Establish sizes for sectors
@@ -110,7 +117,7 @@ void setup() {
     initRandom();
     break;
   case 1:
-    initGenetic();
+    initGenetic(targetChromosome);
     break;
   default:
     initRandom(); 
@@ -126,7 +133,19 @@ void setup() {
 void draw() {
   background(255);
   drawSectors();
-  noLoop();
+
+  if(mode == 1 && mendel.tempMostFitPerc < convergenceValue){
+   mendel.breed(1); 
+   mendel.display();
+  }
+  
+  if(mode == 1 && mendel.tempMostFitPerc > convergenceValue){
+   noLoop(); 
+  }
+  
+  if(mode == 0){
+    noLoop();
+  }
 }
 
 void blockBigSector(int xpos, int ypos) {
@@ -139,13 +158,32 @@ void blockBigSector(int xpos, int ypos) {
   }
 
   // Create the large sector
-  Sector s = new Sector(xpos*secWidth + margW/4.0, ypos*secHeight + margH/4.0, bigSecWidth, bigSecHeight, 2.0);
-  s.bigsec = true;
-  sectors.get(ypos).add(s);
+  bigSector = new Sector(xpos*secWidth + margW/4.0, ypos*secHeight + margH/4.0, bigSecWidth, bigSecHeight, 2.0);
+  bigSector.bigsec  = true;
+  sectors.get(ypos).add(bigSector);
 }
 
-void initGenetic() {
+void initGenetic(String target) {
   createSectors();
+
+  // Create the big flower
+  // -- If 'g' on keyboard, then move forward a generation
+  // -- If 'r' on keyboard, then create a new big flower - random
+  // -- If 'p' on keyboard, then evolve to fill in the canvas
+
+    if (target.equals("")) {
+    // blank, so create random big flower 
+    bigSector.makeFlower();
+    // then assign its genome to the targetChromosome
+    targetChromosome = bigSector.flower.chromosome;
+  } 
+  else {
+    bigSector.makeFlowerWithChromosome(targetChromosome);
+  }
+  
+  mendel = new Mendel(populationSize, targetChromosome);
+  mendel.createInitialPopulation();
+  // mendel.breed(numGenerations);
 }
 
 void createSectors() {
@@ -179,7 +217,7 @@ void drawSectors() {
 }
 
 void makeFlowers() {
-
+  // Add check to make sure we don't make a flower if it already is made
   // Make flowers
   for (ArrayList<Sector> a : sectors) {
     for (Sector s : a) {
@@ -190,12 +228,16 @@ void makeFlowers() {
 
 void mouseClicked() {
   sectors.clear();
-
   int newSeed = (int)random(1, 999999);
-  println("seed: " + newSeed);
   randomSeed(newSeed);
 
-  initRandom();
+  if (mode == 0) {
+    initRandom();
+  } 
+  else if (mode == 1) {
+    initGenetic(targetChromosome);
+    // print("random seed: " + newSeed);
+  }
   loop();
 }
 

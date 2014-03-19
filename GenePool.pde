@@ -40,6 +40,117 @@ class GenePool {
     setupGenes();
   }
 
+
+  // SCORING GENES *******************
+
+  int fitness(String chromToScore, String target) {
+    // Take the negative of the absolute value of the difference
+    // for each chromosome and sum them
+
+    int score        = 0;
+    int countCorrect = 0;
+
+    for (int i = 0; i < target.length(); i++) {
+      int scoreVal  = allelePool.indexOf(chromToScore.charAt(i));
+      int targetVal = allelePool.indexOf(target.charAt(i));
+      
+      if(scoreVal != targetVal){
+       // penalty for being wrong.
+        // score -= 8;
+      } else {
+        score += 100;
+        countCorrect += 1; 
+      }
+      
+      // score -= abs(scoreVal - targetVal);
+    }
+
+    return score;
+  }
+
+  // MUTATING GENES ******************
+  char mutationOf(char gene, int genePosition) {
+
+    // Here's how they map
+    //  0: bloom height
+    //  1: bloom color major
+    //  2: bloom color minor
+    //  3: stem color
+    //  4: stem shape
+    //  5: stem width
+    //  6: stem variation
+    //  7: stem leaves num
+    //  8: leaf type num
+    //  9: leaf pattern num
+    // 10: leaf highlight color
+    // 11: bloom style
+    // 12: bloom variant
+    // 13: bloom color three
+    // 14: bloom petal count
+    // 15: bloom variant two
+
+    String newGene;
+
+    switch(genePosition) {
+      case 0:
+        newGene = chooseBloomHeight();
+        break;
+      case 1:
+        newGene = chooseBloomColorMajor();
+        break;
+      case 2:
+        newGene = chooseBloomColorMinor();
+        break;
+      case 3:
+        newGene = chooseStemColor();
+        break;
+      case 4:
+        newGene = chooseStemShape();
+        break;
+      case 5:
+        newGene = chooseStemWidth();
+        break;
+      case 6:
+        newGene = chooseStemVariation();
+        break;
+      case 7:
+        newGene = chooseStemLeavesNum();
+        break;
+      case 8:
+        newGene = chooseLeafTypeNum();
+        break;
+      case 9:
+        newGene = chooseLeafPatternNum();
+        break;
+      case 10:
+        newGene = chooseLeafHighlightColor();
+        break;
+      case 11:
+        newGene = chooseBloomStyle();
+        break;
+      case 12:
+        newGene = chooseBloomVariant();
+        break;
+      case 13:
+        newGene = chooseBloomColorThree();
+        break;
+      case 14:
+        newGene = chooseBloomPetalCount();
+        break;
+      case 15:
+        newGene = chooseBloomVariantTwo();
+        break;
+      default:
+        println("MUTATION ERROR");
+        return gene;
+    }
+    char newGeneAsChar = newGene.charAt(0);
+    return newGeneAsChar;
+  }
+
+
+  // ESTABLISHING GENES **************
+
   // For establishing chromosomes
   void setupGenes() {
     setupBloomHeight();
@@ -59,31 +170,110 @@ class GenePool {
   }
 
   String buildChromosome() {
-    // for each gene, get a random number between 0 and 19,
-    // then get the allele for that number and add it to this string
     String chromosome = "";
+    String c, d;
 
-    // bloomHeight
-    int bhRand = (int)random(0, bloomHeightValues.size());
-    chromosome = chromosome + alleleAssignment(bhRand);
+    // BLOOM HEIGHT
+    c = chooseBloomHeight();
+    chromosome = chromosome + c;
 
-    // bloomColorMajor
-    int bhColor = (int)random(0, bloomColorValues.size());
-    chromosome = chromosome + alleleAssignment(bhColor);
+    // BLOOM COLOR - MAJOR
+    c = chooseBloomColorMajor();
+    chromosome = chromosome + c;
 
-    // bloomColorMinor
-    int bhColorM = (int)random(0, bloomColorValues.size());
-    // Avoid having the same minor and major color
-    while(bhColorM == bhColor){
-      bhColorM = (int)random(0, bloomColorValues.size());
+    // BLOOM COLOR - MINOR
+    d = chooseBloomColorMinor();
+    while (c.equals (d)) {
+      d = chooseBloomColorMinor();
     }
-    chromosome   = chromosome + alleleAssignment(bhColorM);
+    chromosome = chromosome + d;
 
-    // stemColor
+    // STEM COLOR
+    c = chooseStemColor();
+    chromosome = chromosome + c;
+
+    // STEM SHAPE
+    c = chooseStemShape();
+    chromosome = chromosome + c;
+
+    // STEM WIDTH
+    c = chooseStemWidth();
+    chromosome = chromosome + c;
+
+    // STEM VARIATION
+    c = chooseStemVariation();
+    chromosome = chromosome + c;
+
+    // STEM LEAVES NUM
+    c = chooseStemLeavesNum();
+    chromosome = chromosome + c;
+
+    // LEAF TYPE NUM
+    c = chooseLeafTypeNum();
+    chromosome = chromosome + c;
+
+    // LEAF PATTERN NUM
+    c = chooseLeafPatternNum();
+    chromosome = chromosome + c;
+
+    // LEAF HIGHLIGHT COLOR
+    c = chooseLeafHighlightColor();
+    chromosome = chromosome + c;
+
+    // BLOOM STYLE
+    c = chooseBloomStyle();
+    chromosome = chromosome + c;
+
+    // BLOOM VARIANT
+    c = chooseBloomVariant();
+    chromosome = chromosome + c;
+
+    // BLOOM COLOR THREE
+    c = chooseBloomColorThree();
+    chromosome = chromosome + c;
+
+    // BLOOM PETAL COUNT
+    c = chooseBloomPetalCount();
+    chromosome = chromosome + c;
+
+    // BLOOM VARIANT TWO
+    c = chooseBloomVariantTwo();
+    chromosome = chromosome + c;
+
+    return chromosome;
+  }
+
+
+
+
+  // ************************************************************
+  // These functions assist with the mutation of genes
+  // and are used in the construction of chromosomes.
+  // They are broken out so that they can be called gene
+  // by gene when a mutation happens.
+  // ************************************************************
+
+  String chooseBloomHeight() {
+    int bhRand = (int)random(0, bloomHeightValues.size());
+    return alleleAssignment(bhRand);
+  }
+
+  String chooseBloomColorMajor() {
+    int bhColor = (int)random(0, bloomColorValues.size());
+    return alleleAssignment(bhColor);
+  }
+
+  String chooseBloomColorMinor() {
+    int bhColor = (int)random(0, bloomColorValues.size());
+    return alleleAssignment(bhColor);
+  }
+
+  String chooseStemColor() {
     int stemColor = (int)random(0, stemColorValues.size());
-    chromosome = chromosome + alleleAssignment(stemColor);
+    return alleleAssignment(stemColor);
+  }
 
-    // stemShape
+  String chooseStemShape() {
     int stemShapeDec = (int)random(0, 100);
     int stemShape;
     if (stemShapeDec < 34) {
@@ -95,58 +285,70 @@ class GenePool {
     else {
       stemShape = 2;
     }
-    chromosome = chromosome + alleleAssignment(stemShape);
-
-    // stemWidth
-    int swRand = (int)random(0, 19);
-    chromosome = chromosome + alleleAssignment(swRand);
-
-    // stemVariation 
-    int maxIndex = stemVariationValues.size(); // POSSIBLE BUG: might need to -1 on maxIndex
-    int stemVariation = (int)random(0, maxIndex);
-    chromosome = chromosome + alleleAssignment(stemVariation);
-
-    // stem leaves number
-    maxIndex = stemLeavesNumValues.size();
-    int stemLeavesNum = (int)random(1, maxIndex);
-    chromosome = chromosome + alleleAssignment(stemLeavesNum);
-
-    // Leaf types
-    maxIndex = leafTypeValues.size();
-    int leafTypeNum = (int)random(0, maxIndex);
-    chromosome = chromosome + alleleAssignment(leafTypeNum);
-
-    // Leaf patterns
-    maxIndex = leafPatternValues.size();
-    int leafPatternNum = (int)random(0, maxIndex);
-    chromosome = chromosome + alleleAssignment(leafPatternNum);
-
-    // Leaf Colors
-    int leafHighlightColor = (int)random(0, stemColorValues.size());
-    chromosome = chromosome + alleleAssignment(leafHighlightColor);
-
-    // Bloom Styles
-    int bloomStyle = (int)random(0, bloomStyleValues.size());
-    chromosome = chromosome + alleleAssignment(bloomStyle);
-
-    // Bloom Variant
-    int bloomVariant = (int)random(0, bloomVariantValues.size());
-    chromosome = chromosome + alleleAssignment(bloomVariant);
-
-    // Bloom Color Three
-    int bhColorThree = (int)random(0, bloomColorThreeValues.size());
-    chromosome = chromosome + alleleAssignment(bhColorThree);
-    
-    // Bloom Petal Count
-    int blPetCt = (int)random(0,bloomPetalCountValues.size());
-    chromosome = chromosome + alleleAssignment(blPetCt);
-    
-    // Bloom Variant Two
-    int blVar2 = (int)random(0,bloomVariantTwoValues.size());
-    chromosome = chromosome + alleleAssignment(blVar2);
-
-    return chromosome;
+    return alleleAssignment(stemShape);
   }
+
+  String chooseStemWidth() {
+    int swRand = (int)random(0, stemWidthValues.size());
+    return alleleAssignment(swRand);
+  }
+
+  String chooseStemVariation() {
+    int stemVariation = (int)random(0, stemVariationValues.size());
+    return alleleAssignment(stemVariation);
+  }
+
+  String chooseStemLeavesNum() {
+    int stemLeavesNum = (int)random(1, stemLeavesNumValues.size());
+    return alleleAssignment(stemLeavesNum);
+  }
+
+  String chooseLeafTypeNum() {
+    int leafTypeNum = (int)random(0, leafTypeValues.size());
+    return alleleAssignment(leafTypeNum);
+  }
+
+  String chooseLeafPatternNum() {
+    int leafPatternNum = (int)random(0, leafPatternValues.size());
+    return alleleAssignment(leafPatternNum);
+  }
+
+  String chooseLeafHighlightColor() {
+    int leafHighlightColor = (int)random(0, stemColorValues.size());
+    return alleleAssignment(leafHighlightColor);
+  }
+
+  String chooseBloomStyle() {
+    int bloomStyle = (int)random(0, bloomStyleValues.size());
+    return alleleAssignment(bloomStyle);
+  }
+
+  String chooseBloomVariant() {
+    int bloomVariant = (int)random(0, bloomVariantValues.size());
+    return alleleAssignment(bloomVariant);
+  }
+
+  String chooseBloomColorThree() {
+    int bhColorThree = (int)random(0, bloomColorThreeValues.size());
+    return alleleAssignment(bhColorThree);
+  }
+
+  String chooseBloomPetalCount() {
+    int blPetCt = (int)random(0, bloomPetalCountValues.size());
+    return alleleAssignment(blPetCt);
+  }
+
+  String chooseBloomVariantTwo() {
+    int blVar2 = (int)random(0, bloomVariantTwoValues.size());
+    return alleleAssignment(blVar2);
+  }
+
+
+  // **********************************************************************
+  // END OF MUTATION SUPPORTING FUNCTIONS
+  // **********************************************************************
+
+
 
 
   String alleleAssignment(int number) {
@@ -221,7 +423,7 @@ class GenePool {
     bloomColorValues.add(new IAAColor(color( 251, 67, 212 )));
     bloomColorValues.add(new IAAColor(color(  67, 187, 251 )));
     bloomColorValues.add(new IAAColor(color( 237, 176, 176 )));
-    
+
     bloomColorValues.add(new IAAColor(color( 185, 16, 109 )));
 
     geneMap.put(Genes.BLOOM_COLOR_THREE, 13);
@@ -408,12 +610,12 @@ class GenePool {
       bloomPetalCountValues.append(bloomPetalCountRange[0] + i);
     }
   }
-  
+
   int bloomPetalCountVal(String chrom) {
     int index = alleleIndexForGene(chrom, Genes.BLOOM_PETAL_COUNT);
     return bloomPetalCountValues.get(index);
   }
-  
+
   // Bloom Variant Two
   void setupBloomVariantTwo() {
     geneMap.put(Genes.BLOOM_VARIANT_TWO, 15);
@@ -427,7 +629,7 @@ class GenePool {
     bloomVariantTwoValues.append(bloomVariantTwoRange[1]);
     // println("bloomVariantTwoValues: " + bloomVariantTwoValues);
   }
-  
+
   float bloomVariantTwoVal(String chrom) {
     int index = alleleIndexForGene(chrom, Genes.BLOOM_VARIANT_TWO);
     return bloomVariantTwoValues.get(index);

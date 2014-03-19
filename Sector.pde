@@ -20,9 +20,27 @@ class Sector {
   }
 
   void makeFlower() {
+    if(dummy){
+     return; 
+    }
     flowerMade = false;
-    flower = new Flower(position, wSec, hSec, secScale); 
+    flower     = new Flower(position, wSec, hSec, secScale); 
     flowerMade = true;
+    if (bigsec) {
+      // println(flower.chromosome);
+    }
+  }
+
+  void makeFlowerWithChromosome(String chrom) {
+    if(dummy){
+     return; 
+    }
+    flowerMade = false;
+    flower     = new Flower(position, wSec, hSec, secScale, chrom); 
+    flowerMade = true;
+    if (bigsec) {
+      println(flower.chromosome);
+    }
   }
 
   void display() {

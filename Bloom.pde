@@ -676,7 +676,7 @@ class Bloom {
     }
 
     if (bloomVariant == 3) {
-      int spiralCount   = 12; // Should be 20 degrees per
+      int spiralCount   = 18; // Should be 20 degrees per
       int angleSpacing  = 360 / spiralCount; // Must divide to an integer
       int spiralRings   =  7;
       float ringSpacing =  2 * secScale;
@@ -705,7 +705,7 @@ class Bloom {
           float nodeCenterY = cos(radians(nodeAngle))*(ringSpacing*r);
           pushMatrix();
           translate(nodeCenterX,nodeCenterY);
-          rotate(5);
+          rotate(radians(nodeAngle));
           ellipse(0, 0, nodeDiam, nodeDiam*2);
           popMatrix();
         }
