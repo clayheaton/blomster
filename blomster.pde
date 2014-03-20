@@ -1,17 +1,40 @@
 import java.util.Collections;
 
-int mode = 0; // Set to 0 for random, 1 for genetic
-String targetChromosome = "BLMEBNEDCAPBCBJF";
-Sector bigSector; // Used when seeding the target
-Mendel mendel;
-int populationSize     = 80; // For starting the genetic algorithm
-int numGenerations     = 1000000;
+// Change the window size by setting the window height
+int windowHeight = 800;
+
+/* ************************************* */
+/* TWEAK TO AFFECT THE GENETIC ALGORITHM */
+/* ************************************* */
+// Set to 0 for random, 1 for genetic
+int mode = 1;
+
+// For starting the genetic algorithm
+int populationSize     = 21;   
+
+// Stop after this many and display as if converged
+int numGenerations     = 5000;
+
+// Consider converged when this fitness is reached
 float convergenceValue = 0.95;
+
+// The percentage chance that a gene will mutate following crossover
+float mutationRate     = 0.015;
+
+// You can seed this with a VALID chromosome
+String targetChromosome = "BLMEBNEDCAPACBCF";
+/* ************************************* */
+/* ************************************* */
+
+Sector bigSector;
+Mendel mendel;
+FitnessGraph fitGraph;
+boolean converged = false;
 
 PFont debugFont, mendelFont;
 
 float golden = 1.618;
-int h = 1000;
+int h = windowHeight;
 int w = int(h * golden);
 
 int margH = 40;
@@ -130,23 +153,76 @@ void setup() {
   background(255);
 }
 
+
+
+
+
 void draw() {
   background(255);
   drawSectors();
 
-  if(mode == 1 && mendel.tempMostFitPerc < convergenceValue){
-   mendel.breed(1); 
-   mendel.display();
+
+  if (!converged && (mode == 1 && mendel.tempMostFitPerc < convergenceValue)) {
+    mendel.breed(1); 
+    mendel.display();
+    fitGraph.display();
   }
-  
-  if(mode == 1 && mendel.tempMostFitPerc > convergenceValue){
-   noLoop(); 
+
+  // Breeding algorithm has run the max # of times.
+  if (mode == 1 && mendel.generation > numGenerations) {
+    converged = true;
   }
-  
-  if(mode == 0){
+
+  // Genetic algorithm has converged to the specified fitness level
+  // or has already run the max number of allowed times per user parameter.
+  if (converged || (mode == 1 && mendel.tempMostFitPerc > convergenceValue)) {
+    converged = true;
+    int pool  = mendel.mostFit.size();
+
+    int sectorsToFill = 0;
+    for (ArrayList<Sector> al: sectors) {
+      for (Sector s: al) {
+        if (!s.dummy && !s.bigsec) {
+          sectorsToFill += 1;
+        }
+      }
+    }
+
+    int skip_n        = max((int)(pool / sectorsToFill), 1);
+    int indexOfFlower = 0;
+
+    for (ArrayList<Sector> al: sectors) {
+      for (Sector s: al) {
+        if (!s.dummy && !s.bigsec && !s.flowerMade) {
+          if (indexOfFlower > (mendel.mostFit.size() - 1)) {
+            break;
+          }
+          s.makeFlowerWithChromosome(mendel.mostFit.get(indexOfFlower));
+          indexOfFlower += skip_n;
+        }
+      }
+    }
+  }
+
+  if (converged) {
+    background(255);
+    drawSectors();
+    noLoop();
+  }
+
+  if (mode == 0) {
     noLoop();
   }
 }
+
+
+
+
+
+
+
+
+
 
 void blockBigSector(int xpos, int ypos) {
   // Mark the small sectors as dummys
@@ -166,12 +242,7 @@ void blockBigSector(int xpos, int ypos) {
 void initGenetic(String target) {
   createSectors();
 
-  // Create the big flower
-  // -- If 'g' on keyboard, then move forward a generation
-  // -- If 'r' on keyboard, then create a new big flower - random
-  // -- If 'p' on keyboard, then evolve to fill in the canvas
-
-    if (target.equals("")) {
+  if (target.equals("")) {
     // blank, so create random big flower 
     bigSector.makeFlower();
     // then assign its genome to the targetChromosome
@@ -180,10 +251,12 @@ void initGenetic(String target) {
   else {
     bigSector.makeFlowerWithChromosome(targetChromosome);
   }
-  
+
   mendel = new Mendel(populationSize, targetChromosome);
   mendel.createInitialPopulation();
   // mendel.breed(numGenerations);
+
+  fitGraph = new FitnessGraph(300, 100);
 }
 
 void createSectors() {
@@ -235,8 +308,9 @@ void mouseClicked() {
     initRandom();
   } 
   else if (mode == 1) {
+    targetChromosome = pool.buildChromosome();
+    converged = false;
     initGenetic(targetChromosome);
-    // print("random seed: " + newSeed);
   }
   loop();
 }

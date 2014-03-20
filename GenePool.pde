@@ -58,14 +58,14 @@ class GenePool {
        // penalty for being wrong.
         // score -= 8;
       } else {
-        score += 100;
-        countCorrect += 1; 
+        score += 1;//100;
+        countCorrect += 1; // Not used
       }
       
       // score -= abs(scoreVal - targetVal);
     }
 
-    return score;
+    return score;// + countCorrect;
   }
 
   // MUTATING GENES ******************

@@ -14,8 +14,6 @@ class Mendel {
 
   int               maxPossibleScore;
 
-  float             mutationRate;
-
   float             tempMostFitPerc;
   String            tempMostFit;
   int               tempBreedingPoolSize;
@@ -32,7 +30,6 @@ class Mendel {
     scores        = new IntList();
     scorePercentages = new FloatList();
     fitnessPercentages = new FloatList();
-    mutationRate     = 0.005;
     tempMostFitPerc  = 0.0;
     tempMostFit      = "";
     tempBreedingPoolSize = 0;
@@ -57,13 +54,13 @@ class Mendel {
     textFont(mendelFont);
     textAlign(LEFT);
     
-    pushMatrix();
-    translate(700, 600);
-    
-    // Draw the most fit flower
-    Sector s = new Sector(-secWidth,-50,secWidth,secHeight,1);
+        // Draw the most fit flower
+    Sector s = new Sector(3*secWidth + margW/4.0,3*secHeight,bigSecWidth,bigSecHeight,2.0);
     s.makeFlowerWithChromosome(tempMostFit);
     s.display();
+    
+    pushMatrix();
+    translate(width * 0.4, height * 0.6);
     
     fill(255, 0, 0);
     text(target, 0, 0);
@@ -73,8 +70,6 @@ class Mendel {
     text(generation, 160, 60);
     text("Peak fitness: ", 0, 90);
     text(tempMostFitPerc, 170, 90);
-    text("Breeding Pool Size: ", 0, 120);
-    text(tempBreedingPoolSize, 270, 120);
     popMatrix();
   }
 
@@ -157,6 +152,7 @@ class Mendel {
     // Version where the child has a 50% chance,
     // for each gene, of getting it from parentA
     // or parentB
+    
     String child = "";
     for (int i = 0; i < parentA.length(); i++) {
       String gene;
@@ -167,7 +163,7 @@ class Mendel {
         gene = Character.toString(parentB.charAt(i));
       } 
       child = child + gene;
-    }
+    } 
 
     // Version where a random midpoint is chosen
     // and the child gets the genes prior to the
