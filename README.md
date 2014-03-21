@@ -4,6 +4,8 @@
 
 This [Processing](http://www.processing.org) sketch is an examination of a genetic algorithm, expressed phenotypically through colorful flowers. 
 
+![pic](pics/gen1.png)
+
 There are two *modes* to the sketch. To change modes, you must change the `mode` variable, which is the first in the main `blomster.pde` file.
 * Set `mode` to `0` for **random mode**. This will allow you to see the variation in the flowers. Simply click your mouse to generate a new set of random flowers.
 * Set `mode` to `1` for **genetic mode**. The sketch will start by trying to converge on a target chromosome. 
@@ -11,7 +13,11 @@ There are two *modes* to the sketch. To change modes, you must change the `mode`
   * When the algorithm converges, you will see selections from the generations that led to the convergence on the canvas.
   * There are several variables at the top of `blomster.pde` that you can manipulate to change the genetic algorithm. 
 
+![pic](pics/gen2.png)
+
 *Special thanks to [Daniel Shiffman](http://shiffman.net/) and his book, [The Nature of Code](http://natureofcode.com/), for providing such clear and concise guides to complicated concepts.*
+
+![pic](pics/gen3.png)
 
 Here are the notes from the top of `blomster.pde`:
 
@@ -52,7 +58,7 @@ int mode               = 1;
 
 // For starting the genetic algorithm
 // Higher numbers converge more quickly
-int populationSize     = 31;   
+int populationSize     = 21;   
 
 // Stop after this many and display as if converged
 int numGenerations     = 50000;
