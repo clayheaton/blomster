@@ -1,19 +1,46 @@
-import java.util.Collections;
+// blomster (flowers) v. 1.0
+// A Genetic Algorithm of Flowers
+// Clay Heaton - 2014
 
-// Change the window size by setting the window height
-int windowHeight = 800;
+// The best way to experience this sketch is to first
+// put it into random mode (first parameter below) and 
+// launch it. The flowers you see are randomly generated.
+// Click the mouse to regenerate them and get a sense
+// of the variety.
+
+// You then can put it back into genetic mode and 
+// launch the sketch to see the population of random
+// flowers evolve towards the target. The most fit
+// flower in each generation is shown to the left 
+// and the target is shown to the right. When the
+// genetic algorithm converges, the screen will 
+// show a selection of the most fit flowers in the
+// generations of the evolution. The earliest 
+// generations are represented in the upper-left
+// and the later generations are represented in 
+// the lower-right.
+
+// Thanks to Daniel Shiffman and The Nature of Code
+// http://natureofcode.com/
+
+// Press p to capture a .pdf of the screen,
+// which will be saved in your sketch's file.
+
+import java.util.Collections;
+import processing.pdf.*;
 
 /* ************************************* */
 /* TWEAK TO AFFECT THE GENETIC ALGORITHM */
 /* ************************************* */
 // Set to 0 for random, 1 for genetic
-int mode = 1;
+int mode               = 1;
 
 // For starting the genetic algorithm
-int populationSize     = 21;   
+// Higher numbers converge more quickly
+int populationSize     = 30;   
 
 // Stop after this many and display as if converged
-int numGenerations     = 5000;
+int numGenerations     = 50000;
 
 // Consider converged when this fitness is reached
 float convergenceValue = 0.95;
@@ -22,26 +49,54 @@ float convergenceValue = 0.95;
 float mutationRate     = 0.015;
 
 // You can seed this with a VALID chromosome
+// Or leave as "" to start with a random chromosome.
 String targetChromosome = "BLMEBNEDCAPACBCF";
+
+// If this is set to true, then the target chromosome
+// above always should evolve in the same manner because
+// the random number generator always should return the
+// same sequence of numbers. 
+boolean seedRandomNumberGenerator = false;
 /* ************************************* */
 /* ************************************* */
+
+
+
+
+/* ************************************* */
+/* ************* WARNING *************** */
+/* ************************************* */
+// Editing most of the values below here or on 
+// other tabs may lead to unexpected results
+/* ************************************* */
+/* ************************************* */
+
+
+// Change the window size by setting the window height
+// Optimized for 800, but will work with larger sizes,
+// And down to height of 700 or so without many problems.
+int windowHeight = 800;
+boolean record = false;
 
 Sector bigSector;
 Mendel mendel;
 FitnessGraph fitGraph;
 boolean converged = false;
 
-PFont debugFont, mendelFont;
+// Used to advance a frame without breeding for PDF export
+boolean dontBreed = false;
+
+PFont debugFont, mendelFont, graphFont, titleFont;
 
 float golden = 1.618;
-int h = windowHeight;
-int w = int(h * golden);
+int   h      = windowHeight;
+int   w      = int(h * golden);
 
 int margH = 40;
 int margW = 40;
 
-int countWide = 14;
-int countHigh = 6;
+int countWide = 14; // optimized for 14
+int countHigh = 6;  // optimized for 6
 
 float secWidth, bigSecWidth;
 float secHeight, bigSecHeight;
@@ -50,7 +105,7 @@ int   stemBaseVarianceFactor = 15; // the lower, the more variance. 1 is min.
 
 boolean debugSector = false;
 boolean debugFlower = false;
-boolean debugBloom  = true;
+boolean debugBloom  = false;
 boolean debugStem   = false;
 
 ArrayList<ArrayList>sectors;
@@ -121,12 +176,27 @@ public interface Genes {
 void setup() {
   if (w % 2 != 0) w+= 1;
   size(w, h);
+
   pool    = new GenePool();
   sectors = new ArrayList<ArrayList>();
-  randomSeed(565299);
 
-  debugFont = loadFont("Consolas-12.vlw");
-  mendelFont = loadFont("CourierNewPS-BoldMT-24.vlw");
+  if (seedRandomNumberGenerator) randomSeed(565299);
+
+
+  debugFont  = createFont("Consolas", 12);
+  mendelFont = createFont("Inconsolata", 20); //loadFont("CourierNewPS-BoldMT-24.vlw");
+  graphFont  = createFont("OpenSans", 12);
+  titleFont  = createFont("HighTowerText", 24);
+
+
+  /*
+  debugFont  = loadFont("Consolas-12.vlw");
+   mendelFont = loadFont("Inconsolata-20.vlw"); //loadFont("CourierNewPS-BoldMT-24.vlw");
+   graphFont  = loadFont("OpenSans-12.vlw");
+   titleFont  = loadFont("HighTowerText-Reg-24.vlw");
+   */
+
+
   textFont(debugFont);
 
   // Establish sizes for sectors
@@ -134,6 +204,8 @@ void setup() {
   bigSecWidth  = 2 * secWidth;
   secHeight    =     (h - margH/2.0) / countHigh;
   bigSecHeight = 2 * secHeight;
+
+  println("secWidth: " + secWidth + ", secHeight: " + secHeight);
 
   switch(mode) {
   case 0:
@@ -158,6 +230,10 @@ void setup() {
 
 
 void draw() {
+  if (record) {
+    beginRecord(PDF, "print-####.pdf");
+  }
+
   background(255);
   drawSectors();
 
@@ -175,7 +251,7 @@ void draw() {
 
   // Genetic algorithm has converged to the specified fitness level
   // or has already run the max number of allowed times per user parameter.
-  if (converged || (mode == 1 && mendel.tempMostFitPerc > convergenceValue)) {
+  if ((converged && !dontBreed)|| (!dontBreed && mode == 1 && mendel.tempMostFitPerc > convergenceValue)) {
     converged = true;
     int pool  = mendel.mostFit.size();
 
@@ -207,37 +283,28 @@ void draw() {
   if (converged) {
     background(255);
     drawSectors();
+    dontBreed = true;
     noLoop();
   }
 
   if (mode == 0) {
     noLoop();
   }
-}
 
-
-
-
-
-
-
-
-
-
-void blockBigSector(int xpos, int ypos) {
-  // Mark the small sectors as dummys
-  for (int i=ypos;i<ypos + 2; i++) {
-    for (int j=xpos;j<xpos + 2; j++) {
-      Sector s = (Sector)sectors.get(i).get(j);
-      s.dummy = true;
-    }
+  if (record) {
+    record = false;
+    endRecord();
   }
-
-  // Create the large sector
-  bigSector = new Sector(xpos*secWidth + margW/4.0, ypos*secHeight + margH/4.0, bigSecWidth, bigSecHeight, 2.0);
-  bigSector.bigsec  = true;
-  sectors.get(ypos).add(bigSector);
 }
+
+
+
+
+
+
+
+
+
 
 void initGenetic(String target) {
   createSectors();
@@ -276,6 +343,27 @@ void createSectors() {
   blockBigSector(9, 3);
 }
 
+void blockBigSector(int xpos, int ypos) {
+  // Mark the small sectors as dummys
+  for (int i=ypos;i<ypos + 2; i++) {
+    for (int j=xpos;j<xpos + 2; j++) {
+      Sector s = (Sector)sectors.get(i).get(j);
+      s.dummy = true;
+    }
+  }
+
+  // Create the large sector
+  bigSector = new Sector(xpos*secWidth + margW/4.0, ypos*secHeight + margH/4.0, bigSecWidth, bigSecHeight, 2.0);
+  bigSector.bigsec  = true;
+  sectors.get(ypos).add(bigSector);
+}
+
+
+
+
+
+
+
 void initRandom() {
   createSectors();
   makeFlowers();
@@ -310,8 +398,16 @@ void mouseClicked() {
   else if (mode == 1) {
     targetChromosome = pool.buildChromosome();
     converged = false;
+    dontBreed = false;
     initGenetic(targetChromosome);
   }
   loop();
+}
+
+void keyPressed() {
+  if (key == 'p') {
+    record = !record;
+    loop();
+  }
 }
 

@@ -53,15 +53,16 @@ class GenePool {
     for (int i = 0; i < target.length(); i++) {
       int scoreVal  = allelePool.indexOf(chromToScore.charAt(i));
       int targetVal = allelePool.indexOf(target.charAt(i));
-      
-      if(scoreVal != targetVal){
-       // penalty for being wrong.
+
+      if (scoreVal != targetVal) {
+        // penalty for being wrong.
         // score -= 8;
-      } else {
+      } 
+      else {
         score += 1;//100;
         countCorrect += 1; // Not used
       }
-      
+
       // score -= abs(scoreVal - targetVal);
     }
 
@@ -92,57 +93,57 @@ class GenePool {
     String newGene;
 
     switch(genePosition) {
-      case 0:
-        newGene = chooseBloomHeight();
-        break;
-      case 1:
-        newGene = chooseBloomColorMajor();
-        break;
-      case 2:
-        newGene = chooseBloomColorMinor();
-        break;
-      case 3:
-        newGene = chooseStemColor();
-        break;
-      case 4:
-        newGene = chooseStemShape();
-        break;
-      case 5:
-        newGene = chooseStemWidth();
-        break;
-      case 6:
-        newGene = chooseStemVariation();
-        break;
-      case 7:
-        newGene = chooseStemLeavesNum();
-        break;
-      case 8:
-        newGene = chooseLeafTypeNum();
-        break;
-      case 9:
-        newGene = chooseLeafPatternNum();
-        break;
-      case 10:
-        newGene = chooseLeafHighlightColor();
-        break;
-      case 11:
-        newGene = chooseBloomStyle();
-        break;
-      case 12:
-        newGene = chooseBloomVariant();
-        break;
-      case 13:
-        newGene = chooseBloomColorThree();
-        break;
-      case 14:
-        newGene = chooseBloomPetalCount();
-        break;
-      case 15:
-        newGene = chooseBloomVariantTwo();
-        break;
-      default:
-        println("MUTATION ERROR");
-        return gene;
+    case 0:
+      newGene = chooseBloomHeight();
+      break;
+    case 1:
+      newGene = chooseBloomColorMajor();
+      break;
+    case 2:
+      newGene = chooseBloomColorMinor();
+      break;
+    case 3:
+      newGene = chooseStemColor();
+      break;
+    case 4:
+      newGene = chooseStemShape();
+      break;
+    case 5:
+      newGene = chooseStemWidth();
+      break;
+    case 6:
+      newGene = chooseStemVariation();
+      break;
+    case 7:
+      newGene = chooseStemLeavesNum();
+      break;
+    case 8:
+      newGene = chooseLeafTypeNum();
+      break;
+    case 9:
+      newGene = chooseLeafPatternNum();
+      break;
+    case 10:
+      newGene = chooseLeafHighlightColor();
+      break;
+    case 11:
+      newGene = chooseBloomStyle();
+      break;
+    case 12:
+      newGene = chooseBloomVariant();
+      break;
+    case 13:
+      newGene = chooseBloomColorThree();
+      break;
+    case 14:
+      newGene = chooseBloomPetalCount();
+      break;
+    case 15:
+      newGene = chooseBloomVariantTwo();
+      break;
+    default:
+      println("MUTATION ERROR");
+      return gene;
     }
     char newGeneAsChar = newGene.charAt(0);
     return newGeneAsChar;

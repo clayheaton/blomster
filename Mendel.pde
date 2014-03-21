@@ -53,23 +53,36 @@ class Mendel {
   void display() {
     textFont(mendelFont);
     textAlign(LEFT);
-    
-        // Draw the most fit flower
-    Sector s = new Sector(3*secWidth + margW/4.0,3*secHeight,bigSecWidth,bigSecHeight,2.0);
+
+    // Draw the most fit flower
+    Sector s = new Sector(3*secWidth + margW/4.0, 3*secHeight + margH/4.0, bigSecWidth, bigSecHeight, 2.0);
     s.makeFlowerWithChromosome(tempMostFit);
     s.display();
-    
+
+
     pushMatrix();
-    translate(width * 0.4, height * 0.6);
-    
+    translate(secWidth * (countWide/2), secHeight * (countHigh/1.5));
+
     fill(255, 0, 0);
     text(target, 0, 0);
     fill(0);
-    text(tempMostFit, 0, 30);
-    text("Generation: ", 0, 60);
-    text(generation, 160, 60);
-    text("Peak fitness: ", 0, 90);
-    text(tempMostFitPerc, 170, 90);
+    textAlign(RIGHT);
+    text("Target:", -2, 0);
+    text("Current Best:", -2, 20);
+    text("Generation:", -2, 40);
+    text("Gen Best Fitness:", -2, 60);
+    textAlign(LEFT);
+    text(tempMostFit, 0, 20);
+    text(generation, 0, 40);
+    text(nf(tempMostFitPerc*100, 2, 1) + "%", 0, 60);
+
+    textAlign(CENTER);
+    text("TARGET", secWidth * 3, secHeight*1.3);
+    text("CURRENT GEN MOST FIT", -secWidth*3, secHeight*1.3);
+    
+    textFont(graphFont);
+    text("Click for a new random target",0,secHeight*1.3);
+
     popMatrix();
   }
 
@@ -152,8 +165,8 @@ class Mendel {
     // Version where the child has a 50% chance,
     // for each gene, of getting it from parentA
     // or parentB
-    
-    String child = "";
+
+      String child = "";
     for (int i = 0; i < parentA.length(); i++) {
       String gene;
       if (random(1) > 0.5) {

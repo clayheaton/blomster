@@ -60,7 +60,6 @@ class Leaf {
     }
 
     rotate(dir * rot);
-    // rect(0, 0, -1 * dir * 30, 7);
 
     beginShape();
     if (left) {

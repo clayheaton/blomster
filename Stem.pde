@@ -213,17 +213,17 @@ class Stem {
       if (r > 50) {
         left = true;
       }
-      
-      if(left == true){
-       if(sumLLeaves > sumRLeaves + 1){
-        left = false;
-       } 
+
+      if (left == true) {
+        if (sumLLeaves > sumRLeaves + 1) {
+          left = false;
+        }
       }
-      
-      if(left == false){
-       if(sumRLeaves > sumLLeaves + 1){
-        left = true;
-       } 
+
+      if (left == false) {
+        if (sumRLeaves > sumLLeaves + 1) {
+          left = true;
+        }
       }
 
 
@@ -283,13 +283,13 @@ class Stem {
 
       if (left && leftBlocked == false) { 
         // println("Left leaf to index: " + idx + ", leafAttachedLeft: " + leafAttachedLeft);
-        Leaf l = new Leaf(stemCenterPoints.get(idx), pt2, true, stemLeafType, stemLeafPattern, stemScale, leafHighlightColor,mainColor);
+        Leaf l = new Leaf(stemCenterPoints.get(idx), pt2, true, stemLeafType, stemLeafPattern, stemScale, leafHighlightColor, mainColor);
         leaves.add(l);
         leafAttachedLeft.set(idx, 1);
         sumLLeaves += 1;
       } 
       else if (left == false && rightBlocked == false) {
-        Leaf l = new Leaf(pt2, stemCenterPoints.get(idx), false, stemLeafType, stemLeafPattern, stemScale, leafHighlightColor,mainColor);
+        Leaf l = new Leaf(pt2, stemCenterPoints.get(idx), false, stemLeafType, stemLeafPattern, stemScale, leafHighlightColor, mainColor);
         leaves.add(l);
         leafAttachedRight.set(idx, 1);
         sumRLeaves += 1;

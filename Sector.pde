@@ -19,9 +19,13 @@ class Sector {
     secScale = _secScale;
   }
 
+  // To create a 'fake' sector for passing
+  Sector() {
+  }
+
   void makeFlower() {
-    if(dummy){
-     return; 
+    if (dummy) {
+      return;
     }
     flowerMade = false;
     flower     = new Flower(position, wSec, hSec, secScale); 
@@ -32,8 +36,8 @@ class Sector {
   }
 
   void makeFlowerWithChromosome(String chrom) {
-    if(dummy){
-     return; 
+    if (dummy) {
+      return;
     }
     flowerMade = false;
     flower     = new Flower(position, wSec, hSec, secScale, chrom); 

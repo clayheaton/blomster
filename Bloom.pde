@@ -35,6 +35,8 @@ class Bloom {
     }
   }
 
+
+
   void display() {
     pushMatrix();
     translate(position.x, position.y);
@@ -59,6 +61,253 @@ class Bloom {
     }
     popMatrix();
   }
+
+  void customVertex(float x, float y, boolean curved, int curveType) {
+    // 1 for single curveVertex()
+    // 2 for double curveVertex()  useful for start and end points in a shape
+    // ignored by regular vertices
+    if (!curved) {
+      vertex(x, y);
+    } 
+    else if (curveType == 1) {
+      curveVertex(x, y);
+    } 
+    else if (curveType == 2) {
+      curveVertex(x, y);
+      curveVertex(x, y);
+    }
+  }
+
+
+  void displayCupStyle() {
+    if (bloomVariant == 1) {
+      drawCup(mainColor, 1.0, 0);  
+      drawCup(secColor, 0.5, w/32.0);
+    } 
+    else {
+
+      boolean useCurve = false;
+      if (bloomVariant == 2) useCurve = true;
+
+      float unit  = w/(9.5 * secScale);
+      float dist1 = 1 * unit * secScale;
+      float dist2 = 2 * unit * secScale;
+      float dist3 = 3 * unit * secScale;
+      float dist4 = 4 * unit * secScale;
+
+      float splayAngle = radians(random(0, 5));
+      float overallRotate = radians(random(-5, 5));
+
+      pushMatrix();
+      translate(bloomCenter.x, bloomCenter.y+(dist1/1.2));
+      // Overall rotation
+      rotate(overallRotate);
+
+      // BG Left - back
+      rotate(-splayAngle);
+      fill(mainColor);
+      beginShape();
+      customVertex(0, 0, useCurve, 2);
+      customVertex(-dist1, -dist2, useCurve, 1);
+      customVertex(0, -dist4 * 0.9, useCurve, 1);
+      customVertex(dist1/4, -dist2 * 0.8, useCurve, 1);
+      customVertex(0, 0, useCurve, 2);
+      endShape();
+
+      // BG RIGHT - back
+      rotate(splayAngle * 2);
+      fill(mainColor);
+      beginShape();
+      customVertex(0, 0, useCurve, 2);
+      customVertex(dist1, -dist2, useCurve, 1);
+      customVertex(0, -dist4 * 0.9, useCurve, 1);
+      customVertex(-dist1/4, -dist2 * 0.8, useCurve, 1);
+      customVertex(0, 0, useCurve, 2);
+      endShape();
+
+      if (useCurve) {
+        stroke(bloomColorThree, 200);
+        strokeWeight(secScale);
+      }
+
+      PVector stPos = new PVector(0, 0);
+      PVector dest  = new PVector(0, -dist4 * 0.9 * random(0.85, 0.95));
+      PVector lerPos = PVector.lerp(stPos, dest, 0.1);
+
+      // BG Left - highlight
+      rotate(-splayAngle * 2);
+      fill(secColor);
+      beginShape();
+      customVertex(lerPos.x, lerPos.y, useCurve, 2);
+      customVertex(-dist1/2, -dist2, useCurve, 1);
+      customVertex(0, -dist4 * 0.9 * random(0.85, 0.95), useCurve, 1);
+      customVertex(lerPos.x, lerPos.y, useCurve, 2);
+      endShape();
+
+      // BG Right - highlight
+      rotate(splayAngle * 2);
+      fill(secColor);
+      beginShape();
+      customVertex(lerPos.x, lerPos.y, useCurve, 2);
+      customVertex(dist1/2, -dist2, useCurve, 1);
+      customVertex(0, -dist4 * 0.9 * random(0.85, 0.95), useCurve, 1);
+      customVertex(lerPos.x, lerPos.y, useCurve, 2);
+      endShape();
+
+      noStroke();
+
+      boolean leftFront = false;
+      if (random(1) < 0.5) leftFront = true;
+
+      rotate(-splayAngle);
+
+      float frontRotIn = radians(random(-10, 15));
+
+      if (leftFront) {
+        cupLeftPetal(-frontRotIn, useCurve);
+        cupRightPetal(frontRotIn, useCurve);
+      } 
+      else {
+        cupRightPetal(frontRotIn, useCurve);
+        cupLeftPetal(-frontRotIn, useCurve);
+      }
+
+      popMatrix();
+    }
+  }
+
+  void cupLeftPetal(float angle, boolean useCurve) {
+
+    rotate(angle);
+
+    float unit  = w/(9.5 * secScale);
+    float dist1 = 1 * unit * secScale;
+    float dist2 = 2 * unit * secScale;
+    float dist3 = 3 * unit * secScale;
+    float dist4 = 4 * unit * secScale;
+    fill(mainColor);
+
+    PVector stPos = new PVector(0, 0);
+    PVector dest  = new PVector(-(dist1 + dist2)/2, -(dist3 + dist4)/2);
+    PVector lerPos = PVector.lerp(stPos, dest, 0.1);
+
+    beginShape();
+    customVertex(0, 0, useCurve, 2);
+    customVertex(0, -(dist1 + dist2)/2, useCurve, 1);
+    customVertex(-(dist1 + dist2)/2, -(dist3 + dist4)/2, useCurve, 1);
+    customVertex(-(dist1 + dist2)/2, -dist1, useCurve, 1);
+    customVertex(0, 0, useCurve, 2);
+    endShape();
+
+    if (useCurve) {
+      stroke(bloomColorThree, 150);
+      strokeWeight(secScale);
+    }
+
+    fill(secColor, 150);
+    beginShape();
+    customVertex(lerPos.x, lerPos.y, useCurve, 2);
+    customVertex(-dist1 * random(0.25, 0.35), random(0.85, 0.95) * -(dist1 + dist2)/2, useCurve, 1);
+    customVertex(-(dist1 + dist2)/2 * random(0.85, 0.95), -(dist3 + dist4)/2 * random(0.85, 0.95), useCurve, 1);
+    customVertex(-(dist1 + dist2)/2 * random(0.65, 0.75), -dist1 * random(1.1, 1.25), useCurve, 1);
+    customVertex(lerPos.x, lerPos.y, useCurve, 2);
+    endShape();
+    rotate(-angle);
+    noStroke();
+  }
+
+  void cupRightPetal(float angle, boolean useCurve) {
+    rotate(angle);
+    float unit = w/(9.5 * secScale);
+    float dist1 = 1 * unit * secScale;
+    float dist2 = 2 * unit * secScale;
+    float dist3 = 3 * unit * secScale;
+    float dist4 = 4 * unit * secScale;
+    fill(mainColor);
+
+    PVector stPos = new PVector(0, 0);
+    PVector dest  = new PVector((dist1 + dist2)/2, -(dist3 + dist4)/2);
+    PVector lerPos = PVector.lerp(stPos, dest, 0.1);
+
+
+    beginShape();
+    customVertex(0, 0, useCurve, 2);
+    customVertex(0, -(dist1 + dist2)/2, useCurve, 1);
+    customVertex((dist1 + dist2)/2, -(dist3 + dist4)/2, useCurve, 1);
+    customVertex((dist1 + dist2)/2, -dist1, useCurve, 1);
+    customVertex(0, 0, useCurve, 2);
+    endShape();
+
+    if (useCurve) {
+      stroke(bloomColorThree, 150);
+      strokeWeight(secScale);
+    }
+
+    fill(secColor, 150);
+    beginShape();
+    customVertex(lerPos.x, lerPos.y, useCurve, 2);
+    customVertex(dist1 * random(0.25, 0.35), random(0.85, 0.95) * -(dist1 + dist2)/2, useCurve, 1);
+    customVertex((dist1 + dist2)/2 * random(0.85, 0.95), -(dist3 + dist4)/2 * random(0.85, 0.95), useCurve, 1);
+    customVertex((dist1 + dist2)/2 * random(0.65, 0.75), -dist1 * random(1.1, 1.25), useCurve, 1);
+    customVertex(lerPos.x, lerPos.y, useCurve, 2);
+    endShape();
+    rotate(-angle);
+
+    noStroke();
+  }
+
+
+
+  void drawCup(color c, float scale, float yOffset) {
+    fill(c);
+
+    float dist1 = (w/8)  * scale;
+    float dist2 = (w/5)  * scale;
+    float dist3 = (w/12) * scale;
+    float dist4 = (w/16) * scale;
+
+    float randAdjustAmt = 40.0;
+    beginShape();
+    // Center bottom anchor start/end point
+    curveVertex( bloomCenter.x, bloomCenter.y + dist1 + yOffset  );
+    curveVertex( bloomCenter.x, bloomCenter.y + dist1 + yOffset  );
+
+    // Right-side ascending
+    curveVertex( bloomCenter.x + dist1, bloomCenter.y + dist4 + yOffset  );
+
+    float randAdjust = random(-w/randAdjustAmt, w/randAdjustAmt);
+    // Top right point
+    curveVertex( bloomCenter.x + dist2, bloomCenter.y - dist1 + yOffset + randAdjust );
+
+    // First dip, right to left
+    curveVertex( bloomCenter.x + dist3, bloomCenter.y - dist4 + yOffset  );
+
+    randAdjust = random(-w/randAdjustAmt, w/randAdjustAmt);
+    // Center top point
+    curveVertex( bloomCenter.x, bloomCenter.y - dist1 + yOffset + randAdjust );
+
+    // Second dip, right to left
+    curveVertex( bloomCenter.x - dist3, bloomCenter.y - dist4 + yOffset  );
+
+    randAdjust = random(-w/randAdjustAmt, w/randAdjustAmt);
+    // Top left point
+    curveVertex( bloomCenter.x - dist2, bloomCenter.y - dist1 + yOffset + randAdjust );
+
+
+    curveVertex( bloomCenter.x - dist1, bloomCenter.y + dist4 + yOffset  );
+
+    // Return to anchor
+    curveVertex( bloomCenter.x, bloomCenter.y + dist1 + yOffset  );
+    curveVertex( bloomCenter.x, bloomCenter.y + dist1 + yOffset  );
+    endShape();
+  }
+
+
+
+
+
+
+
 
   void displayAngledStyle() {
 
@@ -462,60 +711,8 @@ class Bloom {
 
 
 
-  void displayCupStyle() {
-    if (bloomVariant == 5) { // Won't happen...  maybe gradients? TODO
-    } 
-    else {
-      drawCup(mainColor, 1.0, 0);  
-      drawCup(secColor, 0.5, w/32.0);
-    }
-  }
 
 
-  void drawCup(color c, float scale, float yOffset) {
-    fill(c);
-
-    float dist1 = (w/8)  * scale;
-    float dist2 = (w/5)  * scale;
-    float dist3 = (w/12) * scale;
-    float dist4 = (w/16) * scale;
-
-    float randAdjustAmt = 40.0;
-
-    beginShape();
-    // Center bottom anchor start/end point
-    curveVertex( bloomCenter.x, bloomCenter.y + dist1 + yOffset  );
-    curveVertex( bloomCenter.x, bloomCenter.y + dist1 + yOffset  );
-
-    // Right-side ascending
-    curveVertex( bloomCenter.x + dist1, bloomCenter.y + dist4 + yOffset  );
-
-    float randAdjust = random(-w/randAdjustAmt, w/randAdjustAmt);
-    // Top right point
-    curveVertex( bloomCenter.x + dist2, bloomCenter.y - dist1 + yOffset + randAdjust );
-
-    // First dip, right to left
-    curveVertex( bloomCenter.x + dist3, bloomCenter.y - dist4 + yOffset  );
-
-    randAdjust = random(-w/randAdjustAmt, w/randAdjustAmt);
-    // Center top point
-    curveVertex( bloomCenter.x, bloomCenter.y - dist1 + yOffset + randAdjust );
-
-    // Second dip, right to left
-    curveVertex( bloomCenter.x - dist3, bloomCenter.y - dist4 + yOffset  );
-
-    randAdjust = random(-w/randAdjustAmt, w/randAdjustAmt);
-    // Top left point
-    curveVertex( bloomCenter.x - dist2, bloomCenter.y - dist1 + yOffset + randAdjust );
-
-
-    curveVertex( bloomCenter.x - dist1, bloomCenter.y + dist4 + yOffset  );
-
-    // Return to anchor
-    curveVertex( bloomCenter.x, bloomCenter.y + dist1 + yOffset  );
-    curveVertex( bloomCenter.x, bloomCenter.y + dist1 + yOffset  );
-    endShape();
-  }
 
 
 
@@ -609,7 +806,6 @@ class Bloom {
       while (div <= max) {
         color thisFill = lerpColor(mainColor, secColor, currentLerp);
         fill(thisFill);
-        //stroke(thisFill);
 
         PVector outer = new PVector();
         PVector inner = new PVector();
@@ -679,8 +875,8 @@ class Bloom {
       int spiralCount   = 18; // Should be 20 degrees per
       int angleSpacing  = 360 / spiralCount; // Must divide to an integer
       int spiralRings   =  7;
-      float ringSpacing =  2 * secScale;
-      float nodeDiam    =  1.2 * secScale;
+      float ringSpacing =  (w/(45.5 * secScale)) * secScale;
+      float nodeDiam    =  (w/(75.8 * secScale)) * secScale;
 
       int rotDir = 1;
       if (bloomVariantTwo > (bloomVariantTwoRange[1] - bloomVariantTwoRange[0])/2.0) {
@@ -704,7 +900,7 @@ class Bloom {
           float nodeCenterX = sin(radians(nodeAngle))*(ringSpacing*r);
           float nodeCenterY = cos(radians(nodeAngle))*(ringSpacing*r);
           pushMatrix();
-          translate(nodeCenterX,nodeCenterY);
+          translate(nodeCenterX, nodeCenterY);
           rotate(radians(nodeAngle));
           ellipse(0, 0, nodeDiam, nodeDiam*2);
           popMatrix();
