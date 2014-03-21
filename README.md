@@ -7,17 +7,25 @@ This [Processing](http://www.processing.org) sketch is an examination of a genet
 ![pic](pics/gen1.png)
 
 There are two *modes* to the sketch. To change modes, you must change the `mode` variable, which is the first in the main `blomster.pde` file.
-* Set `mode` to `0` for **random mode**. This will allow you to see the variation in the flowers. Simply click your mouse to generate a new set of random flowers.
+* Set `mode` to `0` for **random mode**. This will allow you to see the variation in the flowers. Simply click your mouse to generate a new set of random flowers. The following image is from random mode.
+
+![random](pics/random.png)
+
 * Set `mode` to `1` for **genetic mode**. The sketch will start by trying to converge on a target chromosome. 
   * If you don't like the target, simply click with the mouse to get a new random target. 
   * When the algorithm converges, you will see selections from the generations that led to the convergence on the canvas.
   * There are several variables at the top of `blomster.pde` that you can manipulate to change the genetic algorithm. 
+  * The following images are from different iterations of genetic mode.
+
+![pic](pics/converging.png)
+
+![pic](pics/gen1.png)
+
+![pic](pics/gen3.png)
 
 ![pic](pics/gen2.png)
 
 *Special thanks to [Daniel Shiffman](http://shiffman.net/) and his book, [The Nature of Code](http://natureofcode.com/), for providing such clear and concise guides to complicated concepts.*
-
-![pic](pics/gen3.png)
 
 Here are the notes from the top of `blomster.pde`:
 
