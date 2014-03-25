@@ -37,7 +37,7 @@ int mode               = 1;
 
 // For starting the genetic algorithm
 // Higher numbers converge more quickly
-int populationSize     = 30;   
+int populationSize     = 23;   
 
 // Stop after this many and display as if converged
 int numGenerations     = 50000;
@@ -50,7 +50,7 @@ float mutationRate     = 0.015;
 
 // You can seed this with a VALID chromosome
 // Or leave as "" to start with a random chromosome.
-String targetChromosome = "BLMEBNEDCAPACBCF";
+String targetChromosome = "GABOBADEDDABABGC";
 
 // If this is set to true, then the target chromosome
 // above always should evolve in the same manner because
@@ -383,6 +383,9 @@ void makeFlowers() {
   for (ArrayList<Sector> a : sectors) {
     for (Sector s : a) {
       s.makeFlower();
+      if(s.bigsec == true){
+         println("Chromosome in big sector: " + bigSector.flower.chromosome); 
+      }
     }
   }
 }
