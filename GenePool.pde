@@ -537,6 +537,7 @@ class GenePool {
     leafTypeValues.append(LEAF_TYPE_THIN); // straight
     leafTypeValues.append(LEAF_TYPE_ANGLED); // angles
     leafTypeValues.append(LEAF_TYPE_ROUNDED); // curves
+    leafTypeValues.append(LEAF_TYPE_OVAL); // curves
     leafTypeValues.append(LEAF_TYPE_MULTI);
   }
 

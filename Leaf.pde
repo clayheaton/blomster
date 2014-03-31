@@ -39,6 +39,9 @@ class Leaf {
     case LEAF_TYPE_ROUNDED:
       displayRoundedLeaf();
       break;
+    case LEAF_TYPE_OVAL:
+      displayOvalLeaf();
+      break;
     case LEAF_TYPE_MULTI:
       displayMultiLeaf();
     default:
@@ -60,7 +63,7 @@ class Leaf {
     }
 
     rotate(dir * rot);
-
+    fill(mainColor);
     beginShape();
     if (left) {
       vertex(anchor2.x, anchor2.y);
@@ -96,6 +99,7 @@ class Leaf {
     rotate(dir * rot);
     // rect(0, 0, -1 * dir * 30, 7);
 
+    fill(mainColor);
     beginShape();
     if (left) {
       vertex(anchor2.x, anchor2.y);
@@ -142,6 +146,7 @@ class Leaf {
     rotate(dir * rot);
     // rect(0, 0, -1 * dir * 30, 7);
 
+    fill(mainColor);
     beginShape();
     if (left) {
       vertex(anchor2.x, anchor2.y);
@@ -150,7 +155,7 @@ class Leaf {
       vertex(anchor1.x, anchor1.y);
     }
 
-    vertex(-1 * dir *  4 * leafScale, -3  * leafScale);
+    curveVertex(-1 * dir *  4 * leafScale, -3  * leafScale);
     curveVertex(-1 * dir *  4 * leafScale, -3  * leafScale);
     curveVertex(-1 * dir * 10 * leafScale, -8  * leafScale);
     curveVertex(-1 * dir * 15 * leafScale, -5  * leafScale);
@@ -158,7 +163,7 @@ class Leaf {
     curveVertex(-1 * dir * 15 * leafScale, 5  * leafScale);
     curveVertex(-1 * dir * 10 * leafScale, 8  * leafScale);
     curveVertex(-1 * dir *  4 * leafScale, 3  * leafScale);
-    vertex(-1 * dir *  4 * leafScale, 3  * leafScale);
+    curveVertex(-1 * dir *  4 * leafScale, 3  * leafScale);
 
     if (left) {
       vertex(anchor1.x, anchor1.y);
@@ -170,18 +175,162 @@ class Leaf {
 
     endShape();
 
-    // Highlight color
-    fill(highlightColor, 128);
-    beginShape();
-    curveVertex(-1 * dir * 7 * leafScale, 0  * leafScale);
-    curveVertex(-1 * dir * 7 * leafScale, 0  * leafScale);
-    curveVertex(-1 * dir * 10 * leafScale, -4  * leafScale);
-    curveVertex(-1 * dir * 14 * leafScale, 0  * leafScale);
-    curveVertex(-1 * dir * 10 * leafScale, 4  * leafScale);
-    curveVertex(-1 * dir * 7 * leafScale, 0  * leafScale);
-    endShape();
+    if (leafPattern == LEAF_PATTERN_CIRCLES) {
+      PVector anchorMid = PVector.lerp(anchor1, anchor2, 0.5);
+      if (left) {
+        float sz = random(2, 4);
+        fill(highlightColor, int(random(120, 200)));
+        ellipse(-1 * dir * 11 * leafScale, anchorMid.y + (4.5*leafScale), sz * leafScale, sz * leafScale);
+
+        sz = random(2, 4);
+        fill(highlightColor, int(random(120, 200)));
+        ellipse(-1 * dir * 11 * leafScale, anchorMid.y - (1.5*leafScale), sz * leafScale, sz * leafScale);
+
+        sz = random(2, 4);
+        fill(highlightColor, int(random(120, 200)));
+        ellipse(-1 * dir * 14 * leafScale, anchorMid.y + (1.5*leafScale), sz * leafScale, sz * leafScale);
+
+        sz = random(2, 4);
+        fill(highlightColor, int(random(120, 200)));
+        ellipse(-1 * dir * 8  * leafScale, anchorMid.y + (1.5*leafScale), sz * leafScale, sz * leafScale);
+      } 
+      else {
+        float sz = random(2, 4);
+        fill(highlightColor, int(random(120, 200)));
+        ellipse(-1 * dir * 11 * leafScale, anchorMid.y + (1*leafScale), sz * leafScale, sz * leafScale);
+
+        sz = random(2, 4);
+        fill(highlightColor, int(random(120, 200)));
+        ellipse(-1 * dir * 11 * leafScale, anchorMid.y - (5*leafScale), sz * leafScale, sz * leafScale);
+
+        sz = random(2, 4);
+        fill(highlightColor, int(random(120, 200)));
+        ellipse(-1 * dir * 14 * leafScale, anchorMid.y - (2*leafScale), sz * leafScale, sz * leafScale);
+
+        sz = random(2, 4);
+        fill(highlightColor, int(random(120, 200)));
+        ellipse(-1 * dir * 8  * leafScale, anchorMid.y - (2*leafScale), sz * leafScale, sz * leafScale);
+      }
+
+
+      noStroke();
+    } 
+    else if (leafPattern == LEAF_PATTERN_FILLED) {
+      fill(highlightColor, int(random(120, 200)));
+      beginShape();
+      curveVertex(-1 * dir * 7 * leafScale, 0  * leafScale);
+      curveVertex(-1 * dir * 7 * leafScale, 0  * leafScale);
+      curveVertex(-1 * dir * 10 * leafScale, -4  * leafScale);
+      curveVertex(-1 * dir * 14 * leafScale, 0  * leafScale);
+      curveVertex(-1 * dir * 10 * leafScale, 4  * leafScale);
+      curveVertex(-1 * dir * 7 * leafScale, 0  * leafScale);
+      curveVertex(-1 * dir * 7 * leafScale, 0  * leafScale);
+      endShape();
+    } 
+    else if (leafPattern == LEAF_PATTERN_VEINS) {
+    } 
+    else if (leafPattern == LEAF_PATTERN_NONE) {
+    } 
+    else {
+      // This should never happen
+      println("Disallowed leafPattern");
+    }
+
     fill(mainColor);
   }
+
+  void displayOvalLeaf() {
+    float rot = random(-0.2, 0.2);
+    int dir   = 1;
+
+    PVector anchor1 = new PVector(0, 0);
+    PVector anchor2 = PVector.sub(attachPt, attachPt2);
+
+    PVector newAnchor1 = PVector.lerp(anchor1, anchor2, 0.4);
+    PVector newAnchor2 = PVector.lerp(anchor2, anchor1, 0.4);
+
+    PVector dist  = PVector.sub(anchor1, anchor2);
+    float spread = dist.mag()/1.2;
+    spread = max(spread, 3);
+    //println(spread);
+
+    if (!left) {
+      dir = -1;
+    }
+
+    rotate(dir * rot);
+
+    // Background Main Leaf
+    fill(mainColor);
+    
+    // Debug
+    //stroke(0);
+    //strokeWeight(1);
+    
+    float factor = 1.2;
+    beginShape();
+    if (left) {
+      curveVertex(anchor2.x, anchor2.y);
+      curveVertex(anchor2.x, anchor2.y);
+    } 
+    else {
+      curveVertex(anchor1.x, anchor1.y);
+      curveVertex(anchor1.x, anchor1.y);
+    }
+
+    curveVertex(-1 * dir * 10 * leafScale, -spread * factor * leafScale);
+    curveVertex(-1 * dir * 20 * leafScale, -spread * factor * leafScale);
+    curveVertex(-1 * dir * 30 * leafScale, 0);
+    curveVertex(-1 * dir * 20 * leafScale, spread * factor * leafScale);
+    curveVertex(-1 * dir * 10 * leafScale, spread * factor * leafScale);
+
+
+    if (left) {
+      curveVertex(anchor1.x, anchor1.y);
+      curveVertex(anchor1.x, anchor1.y);
+    } 
+    else {
+      curveVertex(anchor2.x, anchor2.y);
+      curveVertex(anchor2.x, anchor2.y);
+    }
+
+    endShape();
+    noStroke();
+
+    if (leafPattern == LEAF_PATTERN_FILLED) {
+      // Foreground Center stripe
+      fill(highlightColor, 150);
+      factor = 0.4;
+      beginShape();
+      if (left) {
+        curveVertex(newAnchor2.x, newAnchor2.y);
+        curveVertex(newAnchor2.x, newAnchor2.y);
+      } 
+      else {
+        curveVertex(newAnchor1.x, newAnchor1.y);
+        curveVertex(newAnchor1.x, newAnchor1.y);
+      }
+
+      curveVertex(-1 * dir * 20 * leafScale, -spread * factor * leafScale);
+      curveVertex(-1 * dir * 30 * leafScale, 0);
+      curveVertex(-1 * dir * 20 * leafScale, spread * factor * leafScale);
+
+
+      if (left) {
+        curveVertex(newAnchor1.x, newAnchor1.y);
+        curveVertex(newAnchor1.x, newAnchor1.y);
+      } 
+      else {
+        curveVertex(newAnchor2.x, newAnchor2.y);
+        curveVertex(newAnchor2.x, newAnchor2.y);
+      }
+
+      endShape(CLOSE);
+    }
+  }
+
+
+
 
   void displayMultiLeaf() {
     float rot = random(-0.1, 0.2);
@@ -196,7 +345,7 @@ class Leaf {
     }
 
     rotate(dir * rot);
-
+    fill(mainColor);
     beginShape();
 
     float starty, endy;
@@ -237,16 +386,20 @@ class Leaf {
     }
 
     endShape();
-    //println(leafPattern);
+
+
+    fill(highlightColor, 150);
     if (leafPattern == LEAF_PATTERN_CIRCLES) {
-      fill(highlightColor, 100);
-      // stroke(255,200);
       ellipse(-1 * dir * 18  * leafScale, ( -4 * leafScale) + anchorMid.y, 4 * leafScale, 4 * leafScale);
       ellipse(-1 * dir * 18  * leafScale, (  4 * leafScale) + anchorMid.y, 4 * leafScale, 4 * leafScale);
       ellipse(-1 * dir * 23  * leafScale, (  0 * leafScale) + anchorMid.y, 4 * leafScale, 4 * leafScale);
-      noStroke();
-      fill(mainColor);
+    } 
+    else if (leafPattern == LEAF_PATTERN_FILLED) {
+      ellipse(-1 * dir * 19  * leafScale, anchorMid.y, 9 * leafScale, 6 * leafScale);
+      ellipse(-1 * dir * 19  * leafScale, anchorMid.y, 6 * leafScale, 9 * leafScale);
     }
+    fill(mainColor);
+    noStroke();
   }
 }
 

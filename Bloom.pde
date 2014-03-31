@@ -310,6 +310,9 @@ class Bloom {
 
 
   void displayAngledStyle() {
+    pushMatrix();
+    translate(bloomCenter.x,bloomCenter.y);
+    rotate(random(radians(-8),radians(8)));
 
     // Problem displaying 7 -- so fix
     if (petalCount == 7) {
@@ -324,28 +327,28 @@ class Bloom {
     float vertUnit = w/20.0;
 
     beginShape();
-    curveVertex(bloomCenter.x, bloomCenter.y);
-    curveVertex(bloomCenter.x, bloomCenter.y);
-    curveVertex(bloomCenter.x, bloomCenter.y - vertUnit);
-    curveVertex(bloomCenter.x - unit*2, bloomCenter.y - vertUnit*3);
+    curveVertex(0, 0);
+    curveVertex(0, 0);
+    curveVertex(0, 0 - vertUnit);
+    curveVertex(0 - unit*2, 0 - vertUnit*3);
 
-    curveVertex(bloomCenter.x - unit*4, bloomCenter.y - vertUnit*3);
-    curveVertex(bloomCenter.x - unit, bloomCenter.y);
-    curveVertex(bloomCenter.x, bloomCenter.y);
-    curveVertex(bloomCenter.x, bloomCenter.y);
+    curveVertex(0 - unit*4, 0 - vertUnit*3);
+    curveVertex(0 - unit, 0);
+    curveVertex(0, 0);
+    curveVertex(0, 0);
     endShape();
 
 
     beginShape();
-    curveVertex(bloomCenter.x, bloomCenter.y);
-    curveVertex(bloomCenter.x, bloomCenter.y);
-    curveVertex(bloomCenter.x, bloomCenter.y - vertUnit);
-    curveVertex(bloomCenter.x + unit*2, bloomCenter.y - vertUnit*3);
+    curveVertex(0, 0);
+    curveVertex(0, 0);
+    curveVertex(0, 0 - vertUnit);
+    curveVertex(0 + unit*2, 0 - vertUnit*3);
 
-    curveVertex(bloomCenter.x + unit*4, bloomCenter.y - vertUnit*3);
-    curveVertex(bloomCenter.x + unit, bloomCenter.y);
-    curveVertex(bloomCenter.x, bloomCenter.y);
-    curveVertex(bloomCenter.x, bloomCenter.y);
+    curveVertex(0 + unit*4, 0 - vertUnit*3);
+    curveVertex(0 + unit, 0);
+    curveVertex(0, 0);
+    curveVertex(0, 0);
 
     endShape();
 
@@ -353,23 +356,23 @@ class Bloom {
     fill(secColor);
 
     beginShape();
-    curveVertex(bloomCenter.x, bloomCenter.y - vertUnit);
-    curveVertex(bloomCenter.x, bloomCenter.y - vertUnit);
-    curveVertex(bloomCenter.x - unit*2, bloomCenter.y - vertUnit*3);
-    curveVertex(bloomCenter.x - unit*2, bloomCenter.y - vertUnit*5);
-    curveVertex(bloomCenter.x, bloomCenter.y - vertUnit*3);
-    curveVertex(bloomCenter.x, bloomCenter.y - vertUnit);
-    curveVertex(bloomCenter.x, bloomCenter.y - vertUnit);
+    curveVertex(0, 0 - vertUnit);
+    curveVertex(0, 0 - vertUnit);
+    curveVertex(0 - unit*2, 0 - vertUnit*3);
+    curveVertex(0 - unit*2, 0 - vertUnit*5);
+    curveVertex(0, 0 - vertUnit*3);
+    curveVertex(0, 0 - vertUnit);
+    curveVertex(0, 0 - vertUnit);
     endShape();
 
     beginShape();
-    curveVertex(bloomCenter.x, bloomCenter.y - vertUnit);
-    curveVertex(bloomCenter.x, bloomCenter.y - vertUnit);
-    curveVertex(bloomCenter.x + unit*2, bloomCenter.y - vertUnit*3);
-    curveVertex(bloomCenter.x + unit*2, bloomCenter.y - vertUnit*5);
-    curveVertex(bloomCenter.x, bloomCenter.y - vertUnit*3);
-    curveVertex(bloomCenter.x, bloomCenter.y - vertUnit);
-    curveVertex(bloomCenter.x, bloomCenter.y - vertUnit);
+    curveVertex(0, 0 - vertUnit);
+    curveVertex(0, 0 - vertUnit);
+    curveVertex(0 + unit*2, 0 - vertUnit*3);
+    curveVertex(0 + unit*2, 0 - vertUnit*5);
+    curveVertex(0, 0 - vertUnit*3);
+    curveVertex(0, 0 - vertUnit);
+    curveVertex(0, 0 - vertUnit);
     endShape();
 
     // Highlights - bloomColorThree and bloomVariant
@@ -384,10 +387,10 @@ class Bloom {
       fill(mainColor);
     }
 
-    PVector p1 = new PVector(bloomCenter.x, bloomCenter.y - vertUnit);
-    PVector p2 = new PVector(bloomCenter.x - unit*2, bloomCenter.y - vertUnit*3);
-    PVector p3 = new PVector(bloomCenter.x, bloomCenter.y - vertUnit*4);
-    PVector p4 = new PVector(bloomCenter.x + unit*2, bloomCenter.y - vertUnit*3);
+    PVector p1 = new PVector(0, 0 - vertUnit);
+    PVector p2 = new PVector(0 - unit*2, 0 - vertUnit*3);
+    PVector p3 = new PVector(0, 0 - vertUnit*4);
+    PVector p4 = new PVector(0 + unit*2, 0 - vertUnit*3);
 
     PVector p1_2 = PVector.lerp(p1, p2, 0.3);
     PVector p1_3 = PVector.lerp(p1, p3, 0.4);
@@ -405,8 +408,8 @@ class Bloom {
 
     // Left highlight point
     p1 = p2;
-    p2 = new PVector(bloomCenter.x - unit*4, bloomCenter.y - vertUnit*3);
-    p3 = new PVector(bloomCenter.x - unit*2, bloomCenter.y - vertUnit*5);
+    p2 = new PVector(0 - unit*4, 0 - vertUnit*3);
+    p3 = new PVector(0 - unit*2, 0 - vertUnit*5);
 
     p1_2 = PVector.lerp(p1, p2, 0.3);
     p1_3 = PVector.lerp(p1, p3, 0.4);
@@ -423,9 +426,9 @@ class Bloom {
     endShape();
 
     // Right highlight point
-    p1 = new PVector(bloomCenter.x + unit*2, bloomCenter.y - vertUnit*3);
-    p2 = new PVector(bloomCenter.x + unit*4, bloomCenter.y - vertUnit*3);
-    p3 = new PVector(bloomCenter.x + unit*2, bloomCenter.y - vertUnit*5);
+    p1 = new PVector(0 + unit*2, 0 - vertUnit*3);
+    p2 = new PVector(0 + unit*4, 0 - vertUnit*3);
+    p3 = new PVector(0 + unit*2, 0 - vertUnit*5);
 
     p1_2 = PVector.lerp(p1, p2, 0.3);
     p1_3 = PVector.lerp(p1, p3, 0.4);
@@ -441,9 +444,9 @@ class Bloom {
     curveVertex(p1.x, p1.y);
     endShape();
 
-    p1 = new PVector(bloomCenter.x, bloomCenter.y - vertUnit*3);
-    p2 = new PVector(bloomCenter.x - unit*2, bloomCenter.y - vertUnit*5);
-    p4 = new PVector(bloomCenter.x + unit*2, bloomCenter.y - vertUnit*5);
+    p1 = new PVector(0, 0 - vertUnit*3);
+    p2 = new PVector(0 - unit*2, 0 - vertUnit*5);
+    p4 = new PVector(0 + unit*2, 0 - vertUnit*5);
     p3 = PVector.lerp(p2, p4, .5);
 
     p1_2 = PVector.lerp(p1, p2, 0.3);
@@ -459,6 +462,7 @@ class Bloom {
     curveVertex(p1.x, p1.y);
     curveVertex(p1.x, p1.y);
     endShape();
+    popMatrix();
   }
 
 
@@ -710,19 +714,12 @@ class Bloom {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-  void displayCircleStyle() {
+void displayCircleStyle() {
+    pushMatrix();
+    translate(bloomCenter.x,bloomCenter.y);
+    rotate(random(radians(-8),radians(8)));
     fill(mainColor);
+    PVector orig = new PVector(0,0);
 
     int   newPetalCount = (int)map(petalCount, bloomPetalCountRange[0], bloomPetalCountRange[1], 5, 18);
 
@@ -737,15 +734,15 @@ class Bloom {
     // Get outer points, then get inner points. curveVertex alternate between them
     for (int i = 0; i < newPetalCount; i++) {
       float angle = petalAngle * i;
-      float ptX   = bloomCenter.x + sin(radians(angle))*outerRadius;
-      float ptY   = bloomCenter.y + cos(radians(angle))*outerRadius;
+      float ptX   = 0 + sin(radians(angle))*outerRadius;
+      float ptY   = 0 + cos(radians(angle))*outerRadius;
       PVector p = new PVector(ptX, ptY);
       outerPoints.add(p);
     }
 
     float angle1 = 0;
-    float ptX1   = bloomCenter.x + sin(radians(angle1))*outerRadius;
-    float ptY1   = bloomCenter.y + cos(radians(angle1))*outerRadius;
+    float ptX1   = 0 + sin(radians(angle1))*outerRadius;
+    float ptY1   = 0 + cos(radians(angle1))*outerRadius;
     PVector p1 = new PVector(ptX1, ptY1);
     outerPoints.add(p1);
 
@@ -753,14 +750,14 @@ class Bloom {
     // Inner points
     for (int i = 0; i < newPetalCount; i++) {
       float angle = petalAngle * i + halfAngle;
-      float ptX   = bloomCenter.x + sin(radians(angle))*innerRadius;
-      float ptY   = bloomCenter.y + cos(radians(angle))*innerRadius;
+      float ptX   = 0 + sin(radians(angle))*innerRadius;
+      float ptY   = 0 + cos(radians(angle))*innerRadius;
       PVector p = new PVector(ptX, ptY);
       innerPoints.add(p);
     }
 
-    float ptX   = bloomCenter.x + sin(radians(halfAngle))*innerRadius;
-    float ptY   = bloomCenter.y + cos(radians(halfAngle))*innerRadius;
+    float ptX   = 0 + sin(radians(halfAngle))*innerRadius;
+    float ptY   = 0 + cos(radians(halfAngle))*innerRadius;
     PVector p2 = new PVector(ptX, ptY);
     innerPoints.add(p2);
 
@@ -782,9 +779,6 @@ class Bloom {
 
     // curveVertex(firstPoint.x,firstPoint.y);
     endShape();
-
-
-
 
     if (bloomVariant == 1) {
       float div  = 7.2;
@@ -814,8 +808,8 @@ class Bloom {
         for (int i = 0; i < outerPoints.size(); i++) {
           PVector thisOuter = outerPoints.get(i);
           PVector thisInner = innerPoints.get(i);
-          outer = PVector.lerp(bloomCenter, thisOuter, reverseLerp);
-          inner = PVector.lerp(bloomCenter, thisInner, reverseLerp);     
+          outer = PVector.lerp(orig, thisOuter, reverseLerp);
+          inner = PVector.lerp(orig, thisInner, reverseLerp);     
 
           if (i == 0) {
             curveVertex(outer.x, outer.y);
@@ -855,8 +849,8 @@ class Bloom {
       for (int i = 0; i < outerPoints.size(); i++) {
         PVector thisOuter = outerPoints.get(i);
         PVector thisInner = innerPoints.get(i);
-        PVector outer = PVector.lerp(bloomCenter, thisOuter, 0.6);
-        PVector inner = PVector.lerp(bloomCenter, thisInner, 0.6);     
+        PVector outer = PVector.lerp(orig, thisOuter, 0.6);
+        PVector inner = PVector.lerp(orig, thisInner, 0.6);     
 
         if (i == 0) {
           curveVertex(outer.x, outer.y);
@@ -868,7 +862,7 @@ class Bloom {
 
       fill(0, 200);
       noStroke();
-      ellipse(bloomCenter.x, bloomCenter.y, 7*secScale, 7*secScale);
+      ellipse(0, 0, 7*secScale, 7*secScale);
     }
 
     if (bloomVariant == 3) {
@@ -886,14 +880,14 @@ class Bloom {
       noStroke();
       fill(secColor);
       float sp = ringSpacing*spiralRings*2;
-      ellipse(bloomCenter.x, bloomCenter.y, sp, sp);
+      ellipse(0, 0, sp, sp);
 
 
 
       fill(bloomColorThree);
       for (int r = 0; r < spiralRings; r++) {
         pushMatrix();
-        translate(bloomCenter.x, bloomCenter.y);
+        translate(0, 0);
         // Nest this inside for each ring
         for (int i = 0; i < spiralCount; i ++) {
           float nodeAngle = i * angleSpacing + (r*angleSpacing/3) * rotDir;
@@ -908,7 +902,19 @@ class Bloom {
         popMatrix();
       }
     }
+    popMatrix();
   }
+
+
+
+
+
+
+
+
+
+
+  
 
 
 

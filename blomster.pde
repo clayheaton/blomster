@@ -24,7 +24,7 @@
 // http://natureofcode.com/
 
 // Press p to capture a .pdf of the screen,
-// which will be saved in your sketch's file.
+// which will be saved in your sketch's folder.
 
 import java.util.Collections;
 import processing.pdf.*;
@@ -37,20 +37,26 @@ int mode               = 1;
 
 // For starting the genetic algorithm
 // Higher numbers converge more quickly
-int populationSize     = 23;   
+int populationSize     = 25;   
 
 // Stop after this many and display as if converged
 int numGenerations     = 50000;
 
 // Consider converged when this fitness is reached
-float convergenceValue = 0.95;
+float convergenceValue = 0.93;
 
 // The percentage chance that a gene will mutate following crossover
 float mutationRate     = 0.015;
 
 // You can seed this with a VALID chromosome
 // Or leave as "" to start with a random chromosome.
-String targetChromosome = "GABOBADEDDABABGC";
+String targetChromosome = "ABOAANADDDDDCBGE";
+
+/* Some example targets
+ fuzzy blue:           MFUSAGBDACKCBBJC
+ red and yellow cup:   GABOBADEDDABABGC
+ fuzzy red and purple: LAKDBDCDACSCCAAJ
+ */
 
 // If this is set to true, then the target chromosome
 // above always should evolve in the same manner because
@@ -140,6 +146,7 @@ final int STEM_SHAPE_CURVES   = 2;
 final int LEAF_TYPE_THIN      = 0;
 final int LEAF_TYPE_ANGLED    = 1;
 final int LEAF_TYPE_ROUNDED   = 2;
+final int LEAF_TYPE_OVAL      = 3;
 final int LEAF_TYPE_MULTI     = 4;
 
 final int LEAF_PATTERN_NONE    = 0;
@@ -383,8 +390,8 @@ void makeFlowers() {
   for (ArrayList<Sector> a : sectors) {
     for (Sector s : a) {
       s.makeFlower();
-      if(s.bigsec == true){
-         println("Chromosome in big sector: " + bigSector.flower.chromosome); 
+      if (s.bigsec == true) {
+        println("Chromosome in big sector: " + bigSector.flower.chromosome);
       }
     }
   }

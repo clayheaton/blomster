@@ -61,12 +61,16 @@ class Stem {
   void display() {
     // Baseline setup
     noStroke();
-    fill(mainColor);
     pushMatrix();
     translate(position.x, position.y);
 
+    for (Leaf l : leaves) {
+      l.display();
+    }
+
     // Choose the stem draw function based on 
     // the genetic stemShape
+    fill(mainColor);
     switch(stemShape) {
     case STEM_SHAPE_STRAIGHT:
       drawStemStraight();
@@ -79,10 +83,6 @@ class Stem {
       break;
     default:
       println("Stem Problem");
-    }
-
-    for (Leaf l : leaves) {
-      l.display();
     }
 
     // If we are debugging
@@ -172,7 +172,7 @@ class Stem {
       float r = random(-stemWidth/2.0, stemWidth/2.0); // Change for random variation
       randomOffsets.append(r);
       PVector t = new PVector(p.x - stemWidth/2 + r, p.y);
-      stemPoints.add(t); // RANDOMIZE THIS
+      stemPoints.add(t);
     }
 
     PVector tt = topAnchor.get();
@@ -192,11 +192,25 @@ class Stem {
 
     for (int i=0; i < reversedCenterPoints.size(); i++) {
       PVector t = new PVector(reversedCenterPoints.get(i).x + stemWidth/2 + reversedRandom.get(i), reversedCenterPoints.get(i).y);
-      stemPoints.add(t); // RANDOMIZE THIS
+      stemPoints.add(t);
     }
 
     bt.add(stemWidth + baseFactor, 0, 0);
     stemPoints.add(bt.get());
+
+    ArrayList<PVector> newStemCenterPoints = new ArrayList<PVector>();
+
+    // Shift the center points so that leaves appear in the proper spot.
+    // This prevents them from poking out on the wrong side of the stem
+    // when they are rotated.
+    for (int i = 0; i < stemCenterPoints.size(); i++) {
+      PVector pt = stemCenterPoints.get(i);
+      Float offset = randomOffsets.get(i);
+      pt.x = pt.x + (0.5 * offset); 
+      newStemCenterPoints.add(pt);
+    }
+
+    stemCenterPoints = newStemCenterPoints;
   }
 
   void setupLeaves() {
@@ -205,7 +219,6 @@ class Stem {
     if (stemLeavesNum == 0) return;
 
     // Loop for creating leaves
-    // println("\n------- New Stem with leaves:" + stemLeavesNum + "...........");
 
     for (int i = 0; i < stemLeavesNum; i++) {
       float r = random(0, 100);
@@ -232,14 +245,7 @@ class Stem {
       boolean leftBlocked  = false;
       boolean rightBlocked = false;
 
-      /*
-      println("New leaf iteration.");
-       println("Index proposed: "   + idx);
-       println("leafAttachedLeft: " + leafAttachedLeft);
-       println("leafAttachedRight:" + leafAttachedRight);
-       */
-
-      float stemAnchorPerc = 0.1;// * stemScale;
+      float stemAnchorPerc = 0.1;
 
       if (stemCenterPoints.size() == 1 || idx == 0) {
         // There's only one center point, so lerp from it towards the bottom
@@ -256,9 +262,7 @@ class Stem {
 
       // Check if the sides are blocked at this node
       if (left == true) {
-        // println("Checking whether left is blocked.");
         if (leafAttachedLeft.get(idx) > 0) {
-          // println("Left is blocked. Trying right.");
           left = false; 
           leftBlocked = true;
         }
@@ -267,7 +271,6 @@ class Stem {
 
       if (left == false) {
         if (leafAttachedRight.get(idx) > 0) {
-          // println("Right is blocked");
           if (leafAttachedLeft.get(idx) == 0) {
             left = true;
           }
@@ -277,12 +280,10 @@ class Stem {
 
       // picked a bad node... TODO figure out how to try another
       if (leftBlocked == true && rightBlocked == true) {
-        // println("Skipping leaf creation.\n");
         continue;
       }
 
       if (left && leftBlocked == false) { 
-        // println("Left leaf to index: " + idx + ", leafAttachedLeft: " + leafAttachedLeft);
         Leaf l = new Leaf(stemCenterPoints.get(idx), pt2, true, stemLeafType, stemLeafPattern, stemScale, leafHighlightColor, mainColor);
         leaves.add(l);
         leafAttachedLeft.set(idx, 1);
@@ -295,7 +296,6 @@ class Stem {
         sumRLeaves += 1;
       }
     }
-    // println("--------------------------------\n");
   }
 }
 
