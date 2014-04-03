@@ -1,6 +1,6 @@
 // blomster (flowers) v. 1.0
 // A Genetic Algorithm of Flowers
-// Clay Heaton - 2014
+// Copyright 2014 Clay Heaton
 
 // The best way to experience this sketch is to first
 // put it into random mode (first parameter below) and 
@@ -33,7 +33,7 @@ import processing.pdf.*;
 /* TWEAK TO AFFECT THE GENETIC ALGORITHM */
 /* ************************************* */
 // Set to 0 for random, 1 for genetic
-int mode               = 1;
+int mode               = 0;
 
 // For starting the genetic algorithm
 // Higher numbers converge more quickly
@@ -50,12 +50,13 @@ float mutationRate     = 0.015;
 
 // You can seed this with a VALID chromosome
 // Or leave as "" to start with a random chromosome.
-String targetChromosome = "ABOAANADDDDDCBGE";
+String targetChromosome = "HGDTBECEDCDBCBDK";
 
 /* Some example targets
  fuzzy blue:           MFUSAGBDACKCBBJC
  red and yellow cup:   GABOBADEDDABABGC
  fuzzy red and purple: LAKDBDCDACSCCAAJ
+ fuzzy pink:           TRBABGDBCBHCAAFD
  */
 
 // If this is set to true, then the target chromosome
@@ -403,6 +404,7 @@ void mouseClicked() {
   randomSeed(newSeed);
 
   if (mode == 0) {
+    println("\nNew Random Seed: " + newSeed);
     initRandom();
   } 
   else if (mode == 1) {

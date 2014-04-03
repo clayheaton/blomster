@@ -865,6 +865,7 @@ void displayCircleStyle() {
       ellipse(0, 0, 7*secScale, 7*secScale);
     }
 
+    // These look sort of like sunflowers
     if (bloomVariant == 3) {
       int spiralCount   = 18; // Should be 20 degrees per
       int angleSpacing  = 360 / spiralCount; // Must divide to an integer
@@ -878,7 +879,7 @@ void displayCircleStyle() {
       }
 
       noStroke();
-      fill(secColor);
+      fill(secColor,150);
       float sp = ringSpacing*spiralRings*2;
       ellipse(0, 0, sp, sp);
 

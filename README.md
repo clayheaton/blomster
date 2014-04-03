@@ -89,3 +89,5 @@ boolean seedRandomNumberGenerator = false;
 /* ************************************* */
 /* ************************************* */
 ```
+
+Copyright 2014 Clay Heaton
