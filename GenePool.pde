@@ -404,28 +404,28 @@ class GenePool {
     geneMap.put(Genes.BLOOM_COLOR_MAJOR, 1);
     geneMap.put(Genes.BLOOM_COLOR_MINOR, 2);
 
-    bloomColorValues.add(new IAAColor(color( 231, 0, 56 )));
-    bloomColorValues.add(new IAAColor(color( 231, 229, 46 )));
-    bloomColorValues.add(new IAAColor(color(  95, 67, 178 )));
-    bloomColorValues.add(new IAAColor(color( 203, 195, 244 )));
-    bloomColorValues.add(new IAAColor(color( 252, 78, 4 )));
-    bloomColorValues.add(new IAAColor(color( 51, 153, 255 )));
-    bloomColorValues.add(new IAAColor(color( 190, 74, 248 )));
-    bloomColorValues.add(new IAAColor(color( 251, 216, 46 )));
-    bloomColorValues.add(new IAAColor(color(  81, 117, 209 )));
-    bloomColorValues.add(new IAAColor(color(  36, 55, 130 )));
     bloomColorValues.add(new IAAColor(color(  97, 4, 103 )));
-    bloomColorValues.add(new IAAColor(color( 118, 192, 216 )));
-    bloomColorValues.add(new IAAColor(color( 248, 109, 9 )));
-    bloomColorValues.add(new IAAColor(color( 207, 0, 3 )));
-    bloomColorValues.add(new IAAColor(color( 236, 12, 2 )));
-    bloomColorValues.add(new IAAColor(color( 146, 211, 153 )));
-    bloomColorValues.add(new IAAColor(color(   2, 173, 175 )));
+    bloomColorValues.add(new IAAColor(color(  95, 67, 158 )));
+    bloomColorValues.add(new IAAColor(color( 127, 0, 255 )));
+    bloomColorValues.add(new IAAColor(color( 190, 74, 248 )));
+    bloomColorValues.add(new IAAColor(color( 203, 135, 255 ))); // mauve
     bloomColorValues.add(new IAAColor(color( 251, 67, 212 )));
-    bloomColorValues.add(new IAAColor(color(  67, 187, 251 )));
-    bloomColorValues.add(new IAAColor(color( 237, 176, 176 )));
-
     bloomColorValues.add(new IAAColor(color( 185, 16, 109 )));
+    bloomColorValues.add(new IAAColor(color( 186, 12, 60 )));
+    bloomColorValues.add(new IAAColor(color( 217, 0, 3 )));
+    bloomColorValues.add(new IAAColor(color( 231, 0, 56 )));
+    bloomColorValues.add(new IAAColor(color( 252, 78, 4 )));
+    bloomColorValues.add(new IAAColor(color( 248, 149, 9 )));
+    bloomColorValues.add(new IAAColor(color( 251, 216, 46 ))); // gold
+    bloomColorValues.add(new IAAColor(color( 235, 238, 22 ))); // yellow
+    bloomColorValues.add(new IAAColor(color( 176, 211, 153 )));
+    bloomColorValues.add(new IAAColor(color( 118, 192, 216 ))); 
+    bloomColorValues.add(new IAAColor(color(   2, 173, 175 )));
+    bloomColorValues.add(new IAAColor(color(  67, 187, 251 )));
+    bloomColorValues.add(new IAAColor(color( 51, 153, 255 ))); // blue
+    bloomColorValues.add(new IAAColor(color(  81, 117, 209 )));
+    bloomColorValues.add(new IAAColor(color(  26, 106, 234 )));
+    bloomColorValues.add(new IAAColor(color(  36, 55, 130 )));
 
     geneMap.put(Genes.BLOOM_COLOR_THREE, 13);
     bloomColorThreeValues.add(new IAAColor(color(0)));
@@ -442,26 +442,27 @@ class GenePool {
   void setupStemColor() {
     geneMap.put(Genes.STEM_COLOR, 3);
 
-    stemColorValues.add(new IAAColor(color( 92, 142, 92 )));
-    stemColorValues.add(new IAAColor(color( 79, 115, 27 ))); //145, 188, 103 ))); // change
-    stemColorValues.add(new IAAColor(color( 84, 212, 84 )));
-    stemColorValues.add(new IAAColor(color( 144, 229, 59 )));
-    stemColorValues.add(new IAAColor(color( 144, 169, 0 )));
-    stemColorValues.add(new IAAColor(color(   2, 165, 57 ))); //153, 204, 153 ))); // change
-    stemColorValues.add(new IAAColor(color( 47, 171, 47 ))); //102, 204, 102 )));
-    stemColorValues.add(new IAAColor(color( 154, 204, 52 )));
-    stemColorValues.add(new IAAColor(color( 0, 204, 0 )));
-    stemColorValues.add(new IAAColor(color( 108, 165, 5))); //153, 153, 102 ))); // change
-    stemColorValues.add(new IAAColor(color( 51, 153, 51 )));
-    stemColorValues.add(new IAAColor(color( 86, 197, 86 )));
-    stemColorValues.add(new IAAColor(color( 51, 102, 51 )));
-    stemColorValues.add(new IAAColor(color( 0, 102, 0 )));
     stemColorValues.add(new IAAColor(color( 0, 76, 0 )));
+    stemColorValues.add(new IAAColor(color( 0, 96, 0 )));
+    stemColorValues.add(new IAAColor(color( 1, 112, 25 )));
+    stemColorValues.add(new IAAColor(color( 51, 102, 51 )));
+    stemColorValues.add(new IAAColor(color( 72, 142, 72 )));
     stemColorValues.add(new IAAColor(color( 59, 76, 0 )));
+    stemColorValues.add(new IAAColor(color( 66, 90, 0 )));
+    stemColorValues.add(new IAAColor(color( 79, 115, 27 )));
     stemColorValues.add(new IAAColor(color( 82, 128, 41 )));
-    stemColorValues.add(new IAAColor(color( 180, 185, 69 )));
-    stemColorValues.add(new IAAColor(color( 66, 77, 0 ))); // change
-    stemColorValues.add(new IAAColor(color( 1, 112, 25 ))); //132, 95, 95 ))); // change
+    stemColorValues.add(new IAAColor(color( 108, 165, 5)));
+    stemColorValues.add(new IAAColor(color( 124, 169, 0 )));
+    stemColorValues.add(new IAAColor(color( 154, 204, 52 )));
+    stemColorValues.add(new IAAColor(color( 120, 195, 29 )));
+    stemColorValues.add(new IAAColor(color( 144, 229, 59 )));
+    stemColorValues.add(new IAAColor(color( 84, 212, 84 )));
+    stemColorValues.add(new IAAColor(color( 86, 197, 86 )));
+    stemColorValues.add(new IAAColor(color( 51, 153, 51 )));
+    stemColorValues.add(new IAAColor(color( 47, 171, 47 )));
+    stemColorValues.add(new IAAColor(color(   2, 165, 57 )));
+    stemColorValues.add(new IAAColor(color( 0, 204, 0 )));
+    
   }
 
   // Stem Shape

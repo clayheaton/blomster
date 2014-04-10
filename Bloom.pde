@@ -479,10 +479,11 @@ class Bloom {
   void displayDandyStyle() {
 
     float sizeAdj = 4.5;
-
-    fill(secColor);
-    noStroke();
-    ellipse(bloomCenter.x, bloomCenter.y, 7*secScale, 7*secScale);
+    
+    fill(255);
+    stroke(255);
+    strokeWeight(1*secScale);
+    ellipse(bloomCenter.x, bloomCenter.y, 3*secScale, 3*secScale);
 
     noFill();
     stroke(mainColor, 100);
@@ -524,6 +525,12 @@ class Bloom {
         line(baseX, baseY, endX, endY);
       }
     }
+    
+    fill(secColor);
+    stroke(secColor,200);
+    strokeWeight(1*secScale);
+    ellipse(bloomCenter.x, bloomCenter.y, 2*secScale, 2*secScale);
+    
   }
 
 
@@ -721,7 +728,12 @@ void displayCircleStyle() {
     fill(mainColor);
     PVector orig = new PVector(0,0);
 
-    int   newPetalCount = (int)map(petalCount, bloomPetalCountRange[0], bloomPetalCountRange[1], 5, 18);
+    int lowerPetalCount = 5;
+    if(bloomVariant == 3){
+     lowerPetalCount = 10; 
+    }
+
+    int   newPetalCount = (int)map(petalCount, bloomPetalCountRange[0], bloomPetalCountRange[1], lowerPetalCount, 18);
 
     float outerRadius = w/4.5;
     float innerRadius = outerRadius*0.8;    

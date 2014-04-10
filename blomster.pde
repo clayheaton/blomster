@@ -50,7 +50,7 @@ float mutationRate     = 0.015;
 
 // You can seed this with a VALID chromosome
 // Or leave as "" to start with a random chromosome.
-String targetChromosome = "HGDTBECEDCDBCBDK";
+String targetChromosome = "HESIADEDAAOCABDJ";
 
 /* Some example targets
  fuzzy blue:           MFUSAGBDACKCBBJC
@@ -120,7 +120,7 @@ GenePool pool;
 
 // Gene Ranges {min,max}
 float[] bloomHeightRanges = { 
-  0.3, 0.6
+  0.33, 0.6
 };
 float[] stemWidthRanges   = { 
   3.0, 6.0
