@@ -170,6 +170,39 @@ class GenePool {
     setupBloomVariantTwo(); // Controls the shape of inset colors on angular petal flowers
   }
 
+  String buildChromosome(String chromToAvoid) {
+    String c       = buildChromosome();
+    char[] c_array = c.toCharArray();
+    
+    // Avoiding color matches with genes at positions 1, 2, 3, and 10
+    // in the starting pool when running in genetic mode
+    int[] check = {1,2,3,10};
+    
+    for(int i = 0; i < check.length; i++){
+      char c_i = c_array[check[i]];
+      char a_i = chromToAvoid.charAt(check[i]);
+      c_array[check[i]] = nonMatchingGene(c_i,a_i,check[i]);
+    }
+    
+    String d = String.valueOf(c_array);
+
+     // This displays chromosomes that were fixed in the starting pool
+    if (!d.equals(c)) {
+      println("Chrom fix from " + c + " to " + d);
+    }
+
+    return d;
+  }
+
+  // For populating the 'random' pool when starting a genetic run
+  char nonMatchingGene(char gene, char geneToAvoid, int index) {
+    while (gene == geneToAvoid) {
+      gene = mutationOf(gene, index);
+    }
+    return gene;
+  }
+
+
   String buildChromosome() {
     String chromosome = "";
     String c, d;
@@ -462,7 +495,6 @@ class GenePool {
     stemColorValues.add(new IAAColor(color( 47, 171, 47 )));
     stemColorValues.add(new IAAColor(color(   2, 165, 57 )));
     stemColorValues.add(new IAAColor(color( 0, 204, 0 )));
-    
   }
 
   // Stem Shape

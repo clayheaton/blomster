@@ -33,39 +33,61 @@ import processing.pdf.*;
 /* TWEAK TO AFFECT THE GENETIC ALGORITHM */
 /* ************************************* */
 // Set to 0 for random, 1 for genetic
-int mode               = 0;
+int mode               = 1;
 
 // For starting the genetic algorithm
 // Higher numbers converge more quickly
-int populationSize     = 25;   
+int populationSize     = 40;   
 
 // Stop after this many and display as if converged
 int numGenerations     = 50000;
 
 // Consider converged when this fitness is reached
-float convergenceValue = 0.93;
+float convergenceValue = 0.97;
 
 // The percentage chance that a gene will mutate following crossover
 float mutationRate     = 0.015;
 
 // You can seed this with a VALID chromosome
 // Or leave as "" to start with a random chromosome.
-String targetChromosome = "HESIADEDAAOCABDJ";
+String targetChromosome = "CTKEBGACCDRBABAD";
 
-/* Some example targets
- fuzzy blue:           MFUSAGBDACKCBBJC
- red and yellow cup:   GABOBADEDDABABGC
- fuzzy red and purple: LAKDBDCDACSCCAAJ
- fuzzy pink:           TRBABGDBCBHCAAFD
- */
+/* Example targets
+
+Purple and red tulip: MCHDAEBDECJBBAEC
+
+*/
 
 // If this is set to true, then the target chromosome
 // above always should evolve in the same manner because
 // the random number generator always should return the
 // same sequence of numbers. 
-boolean seedRandomNumberGenerator = false;
+boolean seedRandomNumberGenerator = true;
+
 /* ************************************* */
 /* ************************************* */
+
+
+
+
+/* ************************************* */
+/* SOME TWEAKS FOR RANDOM MODE DISPLAY   */
+/* ************************************* */
+
+// Do you want to display a larger flower in random mode?
+// If not, you'll get all smaller flowers.
+boolean displayLargeFlowerInRandomMode = true;
+
+// Do you want random mode to display the target chromosome 
+// as the big flower? This can be useful if you have a big
+// flower that you like but you want the rest of the image
+// to be random
+boolean useTargetChromosomeInRandomMode = true;
+
+/* ************************************* */
+/* ************************************* */
+
+
 
 
 
@@ -190,16 +212,17 @@ void setup() {
 
   if (seedRandomNumberGenerator) randomSeed(565299);
 
-
+  /* There are font issues when printing to PDF. Hence
+   fonts aren't really working properly at the moment. */
   debugFont  = createFont("Consolas", 12);
-  mendelFont = createFont("Inconsolata", 20); //loadFont("CourierNewPS-BoldMT-24.vlw");
+  mendelFont = createFont("Consolas", 20); //loadFont("CourierNewPS-BoldMT-24.vlw");
   graphFont  = createFont("OpenSans", 12);
   titleFont  = createFont("HighTowerText", 24);
 
 
-  /*
-  debugFont  = loadFont("Consolas-12.vlw");
-   mendelFont = loadFont("Inconsolata-20.vlw"); //loadFont("CourierNewPS-BoldMT-24.vlw");
+  /* // For when displaying to the screen only
+   debugFont  = loadFont("Consolas-12.vlw");
+   mendelFont = loadFont("Inconsolata-20.vlw");
    graphFont  = loadFont("OpenSans-12.vlw");
    titleFont  = loadFont("HighTowerText-Reg-24.vlw");
    */
@@ -213,20 +236,21 @@ void setup() {
   secHeight    =     (h - margH/2.0) / countHigh;
   bigSecHeight = 2 * secHeight;
 
-  println("secWidth: " + secWidth + ", secHeight: " + secHeight);
+  if (mode == 0 && !useTargetChromosomeInRandomMode) {
+    targetChromosome = "";
+  }
 
   switch(mode) {
   case 0:
-    initRandom();
+    initRandom(targetChromosome);
     break;
   case 1:
     initGenetic(targetChromosome);
     break;
   default:
-    initRandom(); 
+    initRandom(targetChromosome); 
     break;
   }
-  // initialize(); // use for random flowers
 
   smooth();
   frameRate(10);
@@ -301,6 +325,7 @@ void draw() {
 
   if (record) {
     record = false;
+    println("File saved as print-" + frameCount + ".pdf in the sketch's folder");
     endRecord();
   }
 }
@@ -309,12 +334,8 @@ void draw() {
 
 
 
-
-
-
-
-
 void initGenetic(String target) {
+  println("Target: " + target);
   createSectors();
 
   if (target.equals("")) {
@@ -329,10 +350,13 @@ void initGenetic(String target) {
 
   mendel = new Mendel(populationSize, targetChromosome);
   mendel.createInitialPopulation();
-  // mendel.breed(numGenerations);
 
   fitGraph = new FitnessGraph(300, 100);
 }
+
+
+
+
 
 void createSectors() {
   // Create the sectors
@@ -348,8 +372,15 @@ void createSectors() {
     sectors.add(row);
   }
 
-  blockBigSector(9, 3);
+  if (mode == 1 || (mode == 0 && displayLargeFlowerInRandomMode == true)) {
+    blockBigSector(9, 3);
+  }
 }
+
+
+
+
+
 
 void blockBigSector(int xpos, int ypos) {
   // Mark the small sectors as dummys
@@ -368,14 +399,12 @@ void blockBigSector(int xpos, int ypos) {
 
 
 
-
-
-
-
-void initRandom() {
+void initRandom(String target) {
   createSectors();
-  makeFlowers();
+  makeFlowers(target);
 }
+
+
 
 void drawSectors() {
   for (ArrayList<Sector> a : sectors) {
@@ -385,19 +414,38 @@ void drawSectors() {
   }
 }
 
-void makeFlowers() {
+
+// Only called for random mode
+void makeFlowers(String target) {
+  println("mode: " + mode);
   // Add check to make sure we don't make a flower if it already is made
   // Make flowers
   for (ArrayList<Sector> a : sectors) {
     for (Sector s : a) {
-      s.makeFlower();
+
       if (s.bigsec == true) {
+        if (target.equals("")) {
+          // blank, so create random big flower 
+          bigSector.makeFlower();
+          // then assign its genome to the targetChromosome
+          targetChromosome = bigSector.flower.chromosome;
+        } 
+        else {
+          bigSector.makeFlowerWithChromosome(target);
+        }
+
         println("Chromosome in big sector: " + bigSector.flower.chromosome);
+      } 
+      else {
+        s.makeFlower();
       }
     }
   }
 }
 
+
+
+// UI Stuff
 void mouseClicked() {
   sectors.clear();
   int newSeed = (int)random(1, 999999);
@@ -405,7 +453,12 @@ void mouseClicked() {
 
   if (mode == 0) {
     println("\nNew Random Seed: " + newSeed);
-    initRandom();
+    if (useTargetChromosomeInRandomMode) {
+      initRandom(targetChromosome);
+    } 
+    else {
+      initRandom("");
+    }
   } 
   else if (mode == 1) {
     targetChromosome = pool.buildChromosome();

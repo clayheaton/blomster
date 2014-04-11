@@ -44,7 +44,10 @@ class Mendel {
 
   void createInitialPopulation() {
     for (int i = 0; i < genSize; i++) {
-      String chrom = pool.buildChromosome();
+      // Force members of the new population to have different colors
+      // than the target. Colors should be achieved through mutation
+      // in order to improve the visual appearance of the output. Maybe.
+      String chrom = pool.buildChromosome(target);
       currentGen.add(chrom);
     }
   }

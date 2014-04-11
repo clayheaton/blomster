@@ -30,9 +30,6 @@ class Sector {
     flowerMade = false;
     flower     = new Flower(position, wSec, hSec, secScale); 
     flowerMade = true;
-    if (bigsec) {
-      // println(flower.chromosome);
-    }
   }
 
   void makeFlowerWithChromosome(String chrom) {
@@ -42,9 +39,6 @@ class Sector {
     flowerMade = false;
     flower     = new Flower(position, wSec, hSec, secScale, chrom); 
     flowerMade = true;
-    if (bigsec) {
-      println(flower.chromosome);
-    }
   }
 
   void display() {
