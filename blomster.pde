@@ -37,32 +37,42 @@ int mode               = 1;
 
 // For starting the genetic algorithm
 // Higher numbers converge more quickly
-int populationSize     = 40;   
+int populationSize     = 39;   //39
 
 // Stop after this many and display as if converged
-int numGenerations     = 50000;
+int numGenerations     = 5000;
 
 // Consider converged when this fitness is reached
-float convergenceValue = 0.97;
+float convergenceValue = 0.90;
 
 // The percentage chance that a gene will mutate following crossover
-float mutationRate     = 0.015;
+float mutationRate     = 0.015; //0.015; .10
 
 // You can seed this with a VALID chromosome
 // Or leave as "" to start with a random chromosome.
-String targetChromosome = "CTKEBGACCDRBABAD";
+String targetChromosome = "MCHDAEBDECJBBAEC"; //"SKNMACCCDCHBBAAC"; FKNMBGBCDCNBBBAD
 
 /* Example targets
-
-Purple and red tulip: MCHDAEBDECJBBAEC
+Top candidate for IAA: FUKRBGBCCDNBBBAD // squarish leaves with dots
+                       FUKRBGBCDCNBBBAD // oval leaves with stripes
+                       FUFRBGBCDCNBBBAD // top candidate
+                       FUIRBGBCDCNBBAAD
+                       FUFRBGBCDCNBBAAD
+                       FKMRBGBCDCNBBBAD // orange and yellow with light stem
+                       FKUCBGBCDCRBBBAD
+                       FKMRBGBCDCNBBBAD // Used for the IAA
+Purple and red tulip:  MCHDAEBDECJBBAEC
 
 */
+
+// Force diversity in the initial gene pool (genetic mode only):
+boolean forceGeneticDiversity = true;
 
 // If this is set to true, then the target chromosome
 // above always should evolve in the same manner because
 // the random number generator always should return the
 // same sequence of numbers. 
-boolean seedRandomNumberGenerator = true;
+boolean seedRandomNumberGenerator = false;
 
 /* ************************************* */
 /* ************************************* */
@@ -82,7 +92,7 @@ boolean displayLargeFlowerInRandomMode = true;
 // as the big flower? This can be useful if you have a big
 // flower that you like but you want the rest of the image
 // to be random
-boolean useTargetChromosomeInRandomMode = true;
+boolean useTargetChromosomeInRandomMode = false;
 
 /* ************************************* */
 /* ************************************* */
@@ -193,9 +203,9 @@ public interface Genes {
   String BLOOM_VARIANT_TWO   = "bloomVariantTwo";
   String BLOOM_PETAL_COUNT   = "bloomPetalCount";
   String STEM_COLOR          = "stemColor";
-  String STEM_SHAPE          = "stemShape";     // jagged or curved
+  String STEM_SHAPE          = "stemShape";
   String STEM_WIDTH          = "stemWidth";
-  String STEM_VARIATION      = "stemVariation"; // number of variation points
+  String STEM_VARIATION      = "stemVariation";
   String STEM_THORNS         = "stemThorns";    // Does the stem have thorns or not? NOT IN USE
   String STEM_LEAVES_NUM     = "stemLeavesNum";
   String STEM_LEAF_TYPE      = "stemLeafType";

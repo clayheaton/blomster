@@ -186,11 +186,6 @@ class GenePool {
     
     String d = String.valueOf(c_array);
 
-     // This displays chromosomes that were fixed in the starting pool
-    if (!d.equals(c)) {
-      println("Chrom fix from " + c + " to " + d);
-    }
-
     return d;
   }
 
@@ -448,10 +443,11 @@ class GenePool {
     bloomColorValues.add(new IAAColor(color( 217, 0, 3 )));
     bloomColorValues.add(new IAAColor(color( 231, 0, 56 )));
     bloomColorValues.add(new IAAColor(color( 252, 78, 4 )));
-    bloomColorValues.add(new IAAColor(color( 248, 149, 9 )));
+    bloomColorValues.add(new IAAColor(color( 248, 149, 9 )));  
     bloomColorValues.add(new IAAColor(color( 251, 216, 46 ))); // gold
     bloomColorValues.add(new IAAColor(color( 235, 238, 22 ))); // yellow
-    bloomColorValues.add(new IAAColor(color( 176, 211, 153 )));
+    
+    bloomColorValues.add(new IAAColor(color( 150, 170, 255 )));
     bloomColorValues.add(new IAAColor(color( 118, 192, 216 ))); 
     bloomColorValues.add(new IAAColor(color(   2, 173, 175 )));
     bloomColorValues.add(new IAAColor(color(  67, 187, 251 )));

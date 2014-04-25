@@ -47,7 +47,13 @@ class Mendel {
       // Force members of the new population to have different colors
       // than the target. Colors should be achieved through mutation
       // in order to improve the visual appearance of the output. Maybe.
-      String chrom = pool.buildChromosome(target);
+      String chrom;
+      if (forceGeneticDiversity) {
+        chrom = pool.buildChromosome(target);
+      } 
+      else {
+        chrom = pool.buildChromosome();
+      }
       currentGen.add(chrom);
     }
   }
@@ -82,9 +88,9 @@ class Mendel {
     textAlign(CENTER);
     text("TARGET", secWidth * 3, secHeight*1.3);
     text("CURRENT GEN MOST FIT", -secWidth*3, secHeight*1.3);
-    
+
     textFont(graphFont);
-    text("Click for a new random target",0,secHeight*1.3);
+    text("Click for a new random target", 0, secHeight*1.3);
 
     popMatrix();
   }
